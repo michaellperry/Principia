@@ -12,10 +12,20 @@ namespace Principia.ViewModels
         public ViewModelLocator()
         {
             _synchronizationService = new SynchronizationService();
-            //if (!DesignMode)
-            //    _synchronizationService.Initialize();
-            //else
+            if (!DesignMode)
+                _synchronizationService.Initialize();
+            else
                 _synchronizationService.InitializeDesignMode();
+        }
+
+        public object Main
+        {
+            get
+            {
+                return ViewModel(() => new MainViewModel(
+                    _synchronizationService.Community,
+                    _synchronizationService.Individual));
+            }
         }
 
         public object CourseList

@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronizationService.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,8 +153,9 @@
     <Reference Include="UpdateControls">
       <HintPath>..\packages\UpdateControls.2.3.0.4\lib\win81\UpdateControls.dll</HintPath>
     </Reference>
-    <Reference Include="UpdateControls.Correspondence">
-      <HintPath>..\packages\Correspondence.2.2.0.6\lib\win81\UpdateControls.Correspondence.dll</HintPath>
+    <Reference Include="UpdateControls.Correspondence, Version=2.2.0.0, Culture=neutral, PublicKeyToken=19e83a8289e31a8f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Correspondence.2.2.0.7\lib\win81\UpdateControls.Correspondence.dll</HintPath>
     </Reference>
     <Reference Include="UpdateControls.Correspondence.BinaryHTTPClient">
       <HintPath>..\packages\Correspondence.App.Core.2.2.0.5\lib\win81\UpdateControls.Correspondence.BinaryHTTPClient.dll</HintPath>
