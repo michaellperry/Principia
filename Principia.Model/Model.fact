@@ -3,4 +3,36 @@ namespace Principia.Model;
 fact Individual {
 key:
     string anonymousId;
+
+query:
+	Share *sharedCourses {
+		Share s : s.individual = this
+			where s.isCurrent
+	}
+}
+
+fact Course {
+key:
+	unique;
+
+mutable:
+	string title;
+	string description;
+}
+
+fact Share {
+key:
+	unique;
+	Individual individual;
+	Course course;
+
+query:
+	bool isCurrent {
+		not exists ShareRevoke r : r.share = this
+	}
+}
+
+fact ShareRevoke {
+key:
+	Share share;
 }

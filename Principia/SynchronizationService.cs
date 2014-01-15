@@ -123,6 +123,9 @@ namespace Principia
 			_community.Perform(async delegate
 			{
 				var individual = await _community.AddFactAsync(new Individual("design"));
+
+                await DesignData.Create(individual);
+
 				Individual = individual;
 			});
         }

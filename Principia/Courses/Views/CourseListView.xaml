@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="Principia.Courses.Views.CourseListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Principia.Courses.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    DataContext="{Binding CourseList, Source={StaticResource Locator}}">
+	<UserControl.Resources>
+		<DataTemplate x:Key="CourseViewModelTemplate">
+			<Grid Width="500" Margin="0" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110" Margin="10">
+					<Image Height="110" Width="110"/>
+				</Border>
+				<StackPanel Grid.Column="1">
+					<TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="29.333" Margin="10"/>
+					<TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="21.333" Margin="10"/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+	</UserControl.Resources>
+    
+    <Grid>
+    	<GridView ItemTemplate="{StaticResource CourseViewModelTemplate}" ItemsSource="{Binding Courses}" IsSwipeEnabled="False" SelectionMode="Single"/>
+    </Grid>
+</UserControl>
