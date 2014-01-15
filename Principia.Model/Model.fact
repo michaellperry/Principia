@@ -1,0 +1,6 @@
+namespace Principia.Model;
+
+fact Individual {
+key:
+    string anonymousId;
+}
