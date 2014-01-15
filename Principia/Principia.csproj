@@ -106,7 +106,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Courses\ViewModels\Container.cs" />
+    <Compile Include="Courses\Factory.cs" />
     <Compile Include="Courses\ViewModels\CourseListViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseViewModel.cs" />
     <Compile Include="Courses\Views\CourseListView.xaml.cs">

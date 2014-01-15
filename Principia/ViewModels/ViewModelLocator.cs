@@ -22,7 +22,7 @@ namespace Principia.ViewModels
         {
             get
             {
-                return ViewModel(() => Courses.ViewModels.Container.CourseListViewModel(
+                return ViewModel(() => Courses.Factory.CourseListViewModel(
                     _synchronizationService.Individual));
             }
         }
