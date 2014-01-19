@@ -111,13 +111,23 @@
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Courses\Factory.cs" />
+    <Compile Include="Courses\ViewModels\ClipHeaderViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseListViewModel.cs" />
+    <Compile Include="Courses\ViewModels\CourseOutlineViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseViewModel.cs" />
+    <Compile Include="Courses\ViewModels\ModuleHeaderViewModel.cs" />
+    <Compile Include="Courses\ViewModels\SelectionState.cs" />
     <Compile Include="Courses\Views\CourseListView.xaml.cs">
       <DependentUpon>CourseListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Courses\Views\CourseOutlineView.xaml.cs">
+      <DependentUpon>CourseOutlineView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Courses\Views\CoursePage.xaml.cs">
       <DependentUpon>CoursePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Courses\Views\ModuleHeaderView.xaml.cs">
+      <DependentUpon>ModuleHeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DesignData.cs" />
     <Compile Include="HTTPConfigurationProvider.cs" />
@@ -152,7 +162,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Courses\Views\CourseOutlineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Courses\Views\CoursePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Courses\Views\ModuleHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,6 +217,12 @@
   </ItemGroup>
   <ItemGroup>
     <DesignData Include="SampleData\CourseListSampleData.xaml" />
+    <DesignData Include="SampleData\ModuleHeaderViewModelSampleData.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
