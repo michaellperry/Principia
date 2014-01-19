@@ -46,27 +46,51 @@
             <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" Text="XAML Patterns"/>
         </Grid>
-        <TextBox HorizontalAlignment="Left" Height="90" Margin="39,33,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Design patterns for Microsoft client applications using XAML." VerticalAlignment="Top" Width="339"/>
-        <TextBox HorizontalAlignment="Left" Height="90" Margin="438,33,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Over a decade ago, a book by four authors changed the way that we write software. It added words like Singleton, Flyweight, and Visitor to our lexicon. This book showed us how to combine these patterns to construct software at a higher level of abstraction. But it did more than that. It also gave us a template for documenting new patterns.&#xD;&#xA;&#xD;&#xA;While the original authors focused on object-oriented languages such as Smalltalk and C++, we have added declarative languages like XAML to our toolset. This course catalogs many of the patterns that we have discovered related to XAML. It documents them much like the Gang of Four did so long ago. And it shows us how to combine these patterns to raise the level of abstraction and build more useable, beautiful, and maintainable interfaces.&#xD;&#xA;" VerticalAlignment="Top" Width="853"/>
-        <ListView HorizontalAlignment="Left" Height="420" Margin="56,156,0,0" Grid.Row="1" VerticalAlignment="Top" Width="264">
-        	<x:String>XAML Basics</x:String>
-        	<x:String>Blend Techniques</x:String>
-        	<x:String>Composition Patterns</x:String>
-        	<x:String>View Model Patterns</x:String>
-        	<x:String>Design-Time Data Patterns</x:String>
-        	<x:String>Behavioral Patterns</x:String>
-        	<x:String>Animation Patterns</x:String>
-        </ListView>
-        <ListView HorizontalAlignment="Left" Height="390" Margin="404,154,0,0" Grid.Row="1" VerticalAlignment="Top" Width="290">
-        	<x:String>Introduction</x:String>
-        	<x:String>Balanced Whitespace</x:String>
-        	<x:String>Overflow</x:String>
-        	<x:String>Extension Grid</x:String>
-        	<x:String>Assets</x:String>
-        	<x:String>Control Templates</x:String>
-        	<x:String>Implicit Data Templates</x:String>
-        	<x:String>Conclusion</x:String>
-		</ListView>
-        <TextBox HorizontalAlignment="Left" Height="372" Margin="750,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="When you are building a XAML application, you will often want to include design assets from other sources. The Assets pattern separates your application markup from the assets that you include.&#xD;&#xA;&#xD;&#xA;You can get design assets from a number of sources. A couple of my favorite places are Markus Egger's Xamalot, and Sync Fusion's Metro Studio. You can also use Inkscape to turn any SVG artwork into XAML. Or you can load Adobe Illustrator assets into Blend to do the conversion.&#xD;&#xA;&#xD;&#xA;However you acquire your XAML assets, you will want to keep them separate from your application. This lets you work independently of the designer. Even if you are the designer, you will want to keep your graphics markup and your application markup separate, so that they are both easier to manage in their own right. To this end, create a new resource dictionary for a set of related shapes. Prefix each of the asset names in the dictionary with the name of the set. You will be loading all of the asset dictionaries into the same merged dictionary, so you'll want to give them names that will help you keep them straight.&#xD;&#xA;&#xD;&#xA;Each asset will be in the form of a set of paths inside of a Canvas. A canvas is the ideal container for graphics, because it lets the designer explicitly place each path by its coordinates. The challenge is, however, that a canvas doesn't take its size from its elements. You have to set its size explicitly. And the paths can overflow the canvas boundaries, if that's what the designer wants.&#xD;&#xA;&#xD;&#xA;Since the canvas has a fixed size, and the paths are explicitly positioned inside of it, you don't get the automatic layout behavior that you are used to in other containers. Furthermore, you can never be sure that the designer will use the same pixel sizes as your application. So you should always embed the canvas inside of a view box. View box will resize its contents to match the size of the container. It will do this without messing up the proportions of the graphics. Metro Studio always puts assets in a view box. But if you get the file from somewhere else, you may have to add it yourself.&#xD;&#xA;&#xD;&#xA;When you want to use an asset inside of your application, place a ContentControl in the desired location. Set the Content property to the static resource from your resource dictionary. As we will soon see, the ContentControl is one of the most useful controls for composition patterns. Let me show you how to use it.&#xD;&#xA;" VerticalAlignment="Top" Width="541"/>
+        <Grid Grid.Row="1">
+        	<Grid.ColumnDefinitions>
+        		<ColumnDefinition Width="331*"/>
+        		<ColumnDefinition Width="934*"/>
+        	</Grid.ColumnDefinitions>
+        	<ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" ZoomMode="Disabled" Grid.Column="1">
+        		<StackPanel Orientation="Vertical" VerticalAlignment="Top">
+        			<TextBox TextWrapping="Wrap" Text="XAML Patterns" VerticalAlignment="Top" FontSize="26.667" Margin="0,0,0,10"/>
+        			<TextBox TextWrapping="Wrap" Text="In the spirit of Design Patterns by the Gang of Four, XAML Patterns defines a pattern language for rich client applications." VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" AcceptsReturn="True" Margin="0,0,0,10"/>
+        			<TextBox TextWrapping="Wrap" Text="Build applications at a higher level of abstraction. This set of interrelated patterns solves common UI application design problems in a way that keeps both developers and designers happy. Build applications faster, and make them more maintainable, on any XAML stack." VerticalAlignment="Top" AcceptsReturn="True" Margin="0,0,0,10"/>
+        			<TextBox TextWrapping="Wrap" Text="When you are building a XAML application, you will often want to include design assets from other sources. The Assets pattern separates your application markup from the assets that you include.&#xA;&#xA;You can get design assets from a number of sources. A couple of my favorite places are Markus Egger's Xamalot, and Sync Fusion's Metro Studio. You can also use Inkscape to turn any SVG artwork into XAML. Or you can load Adobe Illustrator assets into Blend to do the conversion.&#xA;&#xA;However you acquire your XAML assets, you will want to keep them separate from your application. This lets you work independently of the designer. Even if you are the designer, you will want to keep your graphics markup and your application markup separate, so that they are both easier to manage in their own right. To this end, create a new resource dictionary for a set of related shapes. Prefix each of the asset names in the dictionary with the name of the set. You will be loading all of the asset dictionaries into the same merged dictionary, so you'll want to give them names that will help you keep them straight.&#xA;&#xA;Each asset will be in the form of a set of paths inside of a Canvas. A canvas is the ideal container for graphics, because it lets the designer explicitly place each path by its coordinates. The challenge is, however, that a canvas doesn't take its size from its elements. You have to set its size explicitly. And the paths can overflow the canvas boundaries, if that's what the designer wants.&#xA;&#xA;Since the canvas has a fixed size, and the paths are explicitly positioned inside of it, you don't get the automatic layout behavior that you are used to in other containers. Furthermore, you can never be sure that the designer will use the same pixel sizes as your application. So you should always embed the canvas inside of a view box. View box will resize its contents to match the size of the container. It will do this without messing up the proportions of the graphics. Metro Studio always puts assets in a view box. But if you get the file from somewhere else, you may have to add it yourself.&#xA;&#xA;When you want to use an asset inside of your application, place a ContentControl in the desired location. Set the Content property to the static resource from your resource dictionary. As we will soon see, the ContentControl is one of the most useful controls for composition patterns. Let me show you how to use it.&#xA;" VerticalAlignment="Top" AcceptsReturn="True" Margin="0,0,0,10"/>
+        		</StackPanel>
+        	</ScrollViewer>
+        	<ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" ZoomMode="Disabled">
+        		<Grid VerticalAlignment="Top">
+        			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Overview" VerticalAlignment="Top" FontSize="14.667"/>
+        			<ListView HorizontalAlignment="Left" Margin="24,46,0,0" VerticalAlignment="Top" Width="264">
+        				<x:String>XAML Basics</x:String>
+        				<x:String>Blend Techniques</x:String>
+        				<x:String>Composition Patterns</x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String></x:String>
+        				<x:String>View Model Patterns</x:String>
+        				<x:String>Design-Time Data Patterns</x:String>
+        				<x:String>Behavioral Patterns</x:String>
+        				<x:String>Animation Patterns</x:String>
+        			</ListView>
+        			<ListView HorizontalAlignment="Left" Margin="63,203,0,0" VerticalAlignment="Top" Width="202">
+        				<x:String>Introduction</x:String>
+        				<x:String>Balanced Whitespace</x:String>
+        				<x:String>Overflow</x:String>
+        				<x:String>Extension Grid</x:String>
+        				<x:String>Assets</x:String>
+        				<x:String>Control Templates</x:String>
+        				<x:String>Implicit Data Templates</x:String>
+        				<x:String>Conclusion</x:String>
+        			</ListView>
+        		</Grid>
+        	</ScrollViewer>
+        </Grid>
     </Grid>
 </Page>

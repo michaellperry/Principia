@@ -25,7 +25,7 @@ namespace Principia
                 "Model driven architectures, CQRS, Event Sourcing, and Domain Driven Design for the rest of us.");
             await CreateCourse(individual,
                 "XAML Patterns",
-                "Design patterns for Microsoft client applications using XAML.");
+                "In the spirit of Design Patterns by the Gang of Four, XAML Patterns defines a pattern language for rich client applications.");
             await CreateCourse(individual,
                 "The Parse Mobile Backend with Windows 8",
                 "Building Windows Store applications using the Parse mobile backend as a service.");

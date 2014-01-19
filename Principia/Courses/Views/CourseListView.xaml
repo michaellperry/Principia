@@ -20,7 +20,5 @@
 		</DataTemplate>
 	</UserControl.Resources>
     
-    <ScrollViewer VerticalScrollMode="Disabled" HorizontalScrollMode="Auto" ZoomMode="Disabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-		<GridView ItemsSource="{Binding Courses}" ItemTemplate="{StaticResource CourseViewModelTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="120,0,0,60"/>
-	</ScrollViewer>
+    <GridView ItemsSource="{Binding Courses}" ItemTemplate="{StaticResource CourseViewModelTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Auto" Padding="120,0,0,60"/>
 </UserControl>
