@@ -106,11 +106,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Courses\Factory.cs" />
     <Compile Include="Courses\ViewModels\CourseListViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseViewModel.cs" />
     <Compile Include="Courses\Views\CourseListView.xaml.cs">
       <DependentUpon>CourseListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Courses\Views\CoursePage.xaml.cs">
+      <DependentUpon>CoursePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DesignData.cs" />
     <Compile Include="HTTPConfigurationProvider.cs" />
@@ -134,6 +141,7 @@
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Common\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -141,6 +149,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Courses\Views\CourseListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Courses\Views\CoursePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Principia.Courses.Views;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,11 @@ namespace Principia
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void NewCourse_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(CoursePage));
         }
     }
 }
