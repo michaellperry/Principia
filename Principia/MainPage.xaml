@@ -1,19 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Page xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="using:Principia" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Views="using:Principia.Courses.Views" x:Class="Principia.MainPage" mc:Ignorable="d" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" DataContext="{Binding Main, Source={StaticResource Locator}}">
+	<Page.BottomAppBar>
+		<CommandBar>
+			<AppBarButton Label="New Course" Icon="Add"/>
+		</CommandBar>
+	</Page.BottomAppBar>
 
 	<Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-		<Grid Margin="20">
+		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 
-			<Views:CourseListView Grid.Row="1" Margin="20" />
-			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Principia" VerticalAlignment="Top" FontSize="64" Margin="20" />
+			<Views:CourseListView Margin="0,140,0,0" />
+			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Principia" VerticalAlignment="Top" FontSize="64" Margin="120,42,0,0" />
 
 		</Grid>
 	</Border>

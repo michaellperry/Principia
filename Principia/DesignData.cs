@@ -11,6 +11,12 @@ namespace Principia
     {
         public static async Task Create(Individual individual)
         {
+            for (int i = 0; i < 20; ++i)
+            {
+                await CreateCourse(individual,
+                    "More",
+                    "More stuff to see how this scrolls.");
+            }
             await CreateCourse(individual, 
                 "Provable Code", 
                 "Techniques for mathematically proving the correctness of software.");
