@@ -16,12 +16,12 @@ namespace Principia.ViewModels
         public ViewModelLocator()
         {
             _synchronizationService = new SynchronizationService();
+            _courseSelection = new Courses.Models.CourseSelectionModel();
             if (!DesignMode)
                 _synchronizationService.Initialize();
             else
-                _synchronizationService.InitializeDesignMode();
-
-            _courseSelection = new Courses.Models.CourseSelectionModel();
+                _synchronizationService.InitializeDesignMode(
+                    _courseSelection);
         }
 
         public void InitializeNavigationService(INavigate value)

@@ -65,13 +65,15 @@ namespace Principia
             Synchronize();
         }
 
-        public void InitializeDesignMode()
+        public void InitializeDesignMode(
+            Courses.Models.CourseSelectionModel courseSelection)
         {
             _community = new Community(new MemoryStorageStrategy());
             _community.Register<CorrespondenceModel>();
 			_community.SetDesignMode();
 
-            CreateIndividualDesignData();
+            CreateIndividualDesignData(
+                courseSelection);
         }
 
         public Community Community
@@ -119,12 +121,15 @@ namespace Principia
 			});
         }
 
-        private void CreateIndividualDesignData()
+        private void CreateIndividualDesignData(
+            Courses.Models.CourseSelectionModel courseSelection)
         {
 			_community.Perform(async delegate
 			{
 				var individual = await _community.AddFactAsync(new Individual("design"));
-                await DesignData.Create(individual);
+                await DesignData.Create(
+                    individual,
+                    courseSelection);
 				Individual = individual;
 			});
         }

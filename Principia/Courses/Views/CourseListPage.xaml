@@ -15,7 +15,7 @@
             <Border Background="#FF0D3E14" Width="360" VerticalAlignment="Top" Height="240">
                 <StackPanel>
                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="26.667" Margin="10"/>
-                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="14.667" Margin="10" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                    <TextBlock Text="{Binding ShortDescription}" TextWrapping="Wrap" FontSize="14.667" Margin="10" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -52,7 +52,14 @@
             <TextBlock x:Name="pageTitle" Text="Principia" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
-        <GridView ItemsSource="{Binding Courses}" SelectedItem="{Binding SelectedCourse, Mode=TwoWay}" ItemTemplate="{StaticResource CourseViewModelTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Auto" Padding="120,0,0,60" Grid.Row="1"/>
+        <GridView 
+            ItemsSource="{Binding Courses}" 
+            ItemTemplate="{StaticResource CourseViewModelTemplate}"
+            IsItemClickEnabled="True"
+            ItemClick="Course_ItemClick"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+            Padding="120,0,0,60" 
+            Grid.Row="1"/>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>

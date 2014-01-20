@@ -18,6 +18,11 @@ namespace Principia.Courses.ViewModels
             _newModuleHeaderViewModel = newModuleHeaderViewModel;
         }
 
+        public string Title
+        {
+            get { return _course.Title; }
+        }
+
         public IEnumerable<ModuleHeaderViewModel> Modules
         {
             get

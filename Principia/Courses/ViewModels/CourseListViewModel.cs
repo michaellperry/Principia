@@ -38,24 +38,6 @@ namespace Principia.Courses.ViewModels
             }
         }
 
-        public CourseViewModel SelectedCourse
-        {
-            get
-            {
-                if (_courseSelection.SelectedCourse == null)
-                    return null;
-                else
-                    return _createCourseViewModel(_courseSelection.SelectedCourse);
-            }
-            set
-            {
-                if (value == null)
-                    _courseSelection.SelectedCourse = null;
-                else
-                    _courseSelection.SelectedCourse = value.Course;
-            }
-        }
-
         public ICommand NewCourse
         {
             get

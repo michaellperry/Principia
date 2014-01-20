@@ -1,6 +1,8 @@
 ﻿using Principia.Common;
+using UpdateControls.XAML;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Principia.Courses.ViewModels;
 
 namespace Principia.Courses.Views
 {
@@ -39,6 +41,16 @@ namespace Principia.Courses.Views
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedFrom(e);
+        }
+
+        private void Course_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var courseViewModel = ForView.Unwrap<CourseViewModel>(e.ClickedItem);
+            if (courseViewModel != null)
+            {
+                courseViewModel.Select();
+                Frame.Navigate(typeof(CoursePage));
+            }
         }
     }
 }

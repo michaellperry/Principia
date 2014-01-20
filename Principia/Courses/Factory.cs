@@ -14,7 +14,7 @@ namespace Principia.Courses
             NavigationService navigationService)
         {
             Func<Course, CourseViewModel> createCourseViewModel = course =>
-                new CourseViewModel(course);
+                new CourseViewModel(course, courseSelection);
 
             return new CourseListViewModel(
                 individual,

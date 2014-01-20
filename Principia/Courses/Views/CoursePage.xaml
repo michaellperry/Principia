@@ -1,7 +1,7 @@
 ﻿<Page
     x:Name="pageRoot"
     x:Class="Principia.Courses.Views.CoursePage"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    DataContext="{Binding CourseOutline, Source={StaticResource Locator}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Principia.Courses.Views"
