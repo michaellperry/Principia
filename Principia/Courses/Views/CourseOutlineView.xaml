@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="626"
+    d:DesignWidth="409"
 	DataContext="{Binding CourseOutline, Source={StaticResource Locator}}">
 	<UserControl.Resources>
 		<DataTemplate x:Key="ModuleHeaderDataTemplate">
@@ -15,10 +15,10 @@
 		</DataTemplate>
 	</UserControl.Resources>
     
-    <ScrollViewer>
+    <ScrollViewer Padding="0">
     
-		<StackPanel VerticalAlignment="Top">
-			<TextBlock TextWrapping="Wrap" Text="Overview" FontSize="14.667" Margin="5"/>
+		<StackPanel VerticalAlignment="Top" Margin="5,0,15,0">
+			<TextBlock Text="Overview" FontSize="26.667" Margin="5"/>
 
 			<ItemsControl VerticalAlignment="Top" ItemsSource="{Binding Modules}" ItemTemplate="{StaticResource ModuleHeaderDataTemplate}" Margin="15,0,0,0"/>
 

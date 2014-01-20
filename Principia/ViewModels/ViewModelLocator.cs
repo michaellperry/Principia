@@ -38,11 +38,11 @@ namespace Principia.ViewModels
             }
         }
 
-        public Courses.ViewModels.CourseOutlineViewModel CourseOutline
+        public object CourseOutline
         {
             get
             {
-                return new Courses.ViewModels.CourseOutlineViewModel
+                return ViewModel(() => new Courses.ViewModels.CourseOutlineViewModel
                 {
                     Modules = new List<Courses.ViewModels.ModuleHeaderViewModel>
                     {
@@ -54,6 +54,31 @@ namespace Principia.ViewModels
                         NormalModule("Behavioral Patterns"),
                         NormalModule("Animation Patterns")
                     }
+                });
+            }
+        }
+
+        public Courses.ViewModels.CourseDetailViewModel CourseDetail
+        {
+            get
+            {
+                return new Courses.ViewModels.CourseDetailViewModel
+                {
+                    Title = "XAML Patterns",
+                    ShortDescription = "In the spirit of Design Patterns by the Gang of Four, XAML Patterns defines a pattern language for rich client applications.",
+                    Description = "Build applications at a higher level of abstraction. This set of interrelated patterns solves common UI application design problems in a way that keeps both developers and designers happy. Build applications faster, and make them more maintainable, on any XAML stack.",
+                    Tags = new List<Courses.ViewModels.TagViewModel>
+                    {
+                        Tag("WPF"),
+                        Tag("Silverlight"),
+                        Tag("Windows Phone"),
+                        Tag("Windows 8"),
+                        Tag("WinRT"),
+                        Tag("MVVM"),
+                        Tag("ReactiveUI"),
+                        Tag("XAML"),
+                        Tag("Patterns")
+                    }
                 };
             }
         }
@@ -62,12 +87,7 @@ namespace Principia.ViewModels
         {
             return new Courses.ViewModels.ModuleHeaderViewModel
             {
-                Title = title,
-                SelectionState = Courses.ViewModels.SelectionState.Normal,
-                Clips = new List<Courses.ViewModels.ClipHeaderViewModel>
-                {
-                    Clip("You shouldn't see me")
-                }
+                Title = title
             };
         }
 
@@ -76,7 +96,7 @@ namespace Principia.ViewModels
             return new Courses.ViewModels.ModuleHeaderViewModel
             {
                 Title = title,
-                SelectionState = Courses.ViewModels.SelectionState.Selected,
+                IsSelected = true,
                 Clips = new List<Courses.ViewModels.ClipHeaderViewModel>
                 {
                     Clip("Introduction"),
@@ -96,6 +116,14 @@ namespace Principia.ViewModels
             return new Courses.ViewModels.ClipHeaderViewModel
             {
                 Title = title
+            };
+        }
+
+        private Courses.ViewModels.TagViewModel Tag(string text)
+        {
+            return new Courses.ViewModels.TagViewModel
+            {
+                Text = text
             };
         }
     }
