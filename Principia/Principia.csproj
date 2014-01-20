@@ -111,6 +111,7 @@
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Courses\Factory.cs" />
+    <Compile Include="Courses\Models\CourseSelectionModel.cs" />
     <Compile Include="Courses\ViewModels\ClipHeaderViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseDetailViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseListViewModel.cs" />
@@ -122,8 +123,8 @@
     <Compile Include="Courses\Views\CourseDetailView.xaml.cs">
       <DependentUpon>CourseDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Courses\Views\CourseListView.xaml.cs">
-      <DependentUpon>CourseListView.xaml</DependentUpon>
+    <Compile Include="Courses\Views\CourseListPage.xaml.cs">
+      <DependentUpon>CourseListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Courses\Views\CourseOutlineView.xaml.cs">
       <DependentUpon>CourseOutlineView.xaml</DependentUpon>
@@ -136,12 +137,9 @@
     </Compile>
     <Compile Include="DesignData.cs" />
     <Compile Include="HTTPConfigurationProvider.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronizationService.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\NavigationService.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +165,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Courses\Views\CourseListView.xaml">
+    <Page Include="Courses\Views\CourseListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -182,10 +180,6 @@
     <Page Include="Courses\Views\ModuleHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\DefaultStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -225,9 +219,7 @@
       <Name>Principia.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Courses\Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <DesignData Include="SampleData\CourseListSampleData.xaml" />
     <DesignData Include="SampleData\ModuleHeaderViewModelSampleData.xaml" />

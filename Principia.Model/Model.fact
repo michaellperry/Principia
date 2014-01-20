@@ -17,7 +17,13 @@ key:
 
 mutable:
 	string title;
+	string shortDescription;
 	string description;
+
+query:
+	Module* modules {
+		Module m : m.course = this
+	}
 }
 
 fact Share {
@@ -35,4 +41,14 @@ query:
 fact ShareRevoke {
 key:
 	Share share;
+}
+
+fact Module {
+key:
+	unique;
+	Course course;
+
+mutable:
+	int ordinal;
+	string title;
 }

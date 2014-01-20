@@ -1,28 +1,29 @@
 using Principia.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Principia.Courses.ViewModels
 {
     class CourseViewModel
     {
-        private readonly Share _share;
-
-        public CourseViewModel(Share share)
+        private readonly Course _course;
+        
+        public CourseViewModel(Course course)
         {
-            _share = share;            
+            _course = course;
+        }
+
+        internal Course Course
+        {
+            get { return _course; }
         }
 
         public string Title
         {
-            get { return _share.Course.Title; }
+            get { return _course.Title; }
         }
 
-        public string Description
+        public string ShortDescription
         {
-            get { return _share.Course.Description; }
+            get { return _course.ShortDescription; }
         }
     }
 }

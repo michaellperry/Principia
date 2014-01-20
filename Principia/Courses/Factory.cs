@@ -1,21 +1,37 @@
-﻿using Principia.Courses.ViewModels;
+﻿using Principia.Courses.Models;
+using Principia.Courses.ViewModels;
 using Principia.Model;
+using Principia.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Principia.Courses
 {
     static class Factory
     {
-        public static CourseListViewModel CourseListViewModel(Individual individual)
+        public static CourseListViewModel CourseListViewModel(
+            Individual individual,
+            CourseSelectionModel courseSelection,
+            NavigationService navigationService)
         {
-            Func<Share, CourseViewModel> createCourseViewModel = share =>
-                new CourseViewModel(share);
+            Func<Course, CourseViewModel> createCourseViewModel = course =>
+                new CourseViewModel(course);
 
-            return new CourseListViewModel(individual, createCourseViewModel);
+            return new CourseListViewModel(
+                individual,
+                courseSelection,
+                createCourseViewModel,
+                navigationService);
+        }
+
+        public static CourseOutlineViewModel CourseOutlineViewModel(Course course)
+        {
+            return new CourseOutlineViewModel(course,
+                module => new ModuleHeaderViewModel(module));
+        }
+
+        public static CourseDetailViewModel CourseDetailViewModel(Course course)
+        {
+            return new CourseDetailViewModel(course);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Principia
             var communication = new BinaryHTTPAsynchronousCommunicationStrategy(http);
 
             _community = new Community(storage);
-            _community.AddAsynchronousCommunicationStrategy(communication);
+            //_community.AddAsynchronousCommunicationStrategy(communication);
             _community.Register<CorrespondenceModel>();
             _community.Subscribe(() => Individual);
 
