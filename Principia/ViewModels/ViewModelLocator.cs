@@ -11,17 +11,21 @@ namespace Principia.ViewModels
     {
         private readonly SynchronizationService _synchronizationService;
         private readonly Courses.Models.CourseSelectionModel _courseSelection;
+        private readonly Principia.Courses.Models.ClipSelectionModel _clipSelection;
         private NavigationService _navigationService;
 
         public ViewModelLocator()
         {
             _synchronizationService = new SynchronizationService();
             _courseSelection = new Courses.Models.CourseSelectionModel();
+            _clipSelection = new Courses.Models.ClipSelectionModel();
+
             if (!DesignMode)
                 _synchronizationService.Initialize();
             else
                 _synchronizationService.InitializeDesignMode(
-                    _courseSelection);
+                    _courseSelection,
+                    _clipSelection);
         }
 
         public void InitializeNavigationService(INavigate value)
@@ -49,8 +53,10 @@ namespace Principia.ViewModels
                     if (_courseSelection.SelectedCourse == null)
                         return null;
                     else
+                    {
                         return Courses.Factory.CourseOutlineViewModel(
-                            _courseSelection.SelectedCourse);
+                            _courseSelection.SelectedCourse, _clipSelection);
+                    }
                 });
             }
         }

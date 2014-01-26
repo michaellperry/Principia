@@ -1,3 +1,4 @@
+using Principia.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,16 @@ namespace Principia.Courses.ViewModels
 {
     public class ClipHeaderViewModel
     {
-        public string Title { get; set; }
+        private readonly Clip _clip;
+
+        public ClipHeaderViewModel(Clip clip)
+        {
+            _clip = clip;
+        }
+
+        public string Title
+        {
+            get { return _clip.Title ?? "<<New clip>>"; }
+        }
     }
 }

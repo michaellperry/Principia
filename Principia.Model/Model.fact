@@ -51,4 +51,19 @@ key:
 mutable:
 	int ordinal;
 	string title;
+
+query:
+	Clip* clips {
+		Clip c : c.module = this
+	}
+}
+
+fact Clip {
+key:
+	unique;
+	Module module;
+
+mutable:
+	int ordinal;
+	string title;
 }

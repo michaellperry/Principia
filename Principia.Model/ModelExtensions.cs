@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System;
+using System.Threading.Tasks;
+using UpdateControls.Correspondence;
 
 namespace Principia.Model
 {
@@ -9,6 +12,31 @@ namespace Principia.Model
             var course = await individual.Community.AddFactAsync(new Course());
             await individual.Community.AddFactAsync(new Share(individual, course));
             return course;
+        }
+
+        public static async Task<Module> NewModule(this Course course)
+        {
+            var module = await course.Community.AddFactAsync(new Module(course));
+            return module;
+        }
+
+        public static async Task<Clip> NewClip(this Module module)
+        {
+            var clip = await module.Community.AddFactAsync(new Clip(module));
+            return clip;
+        }
+
+        public static async Task<int> NextOrdinal<T, R>(this Result<T> items, Func<T, TransientDisputable<R, int>> ordinalProperty)
+            where T : CorrespondenceFact
+            where R : CorrespondenceFact
+        {
+            var loadedItems = await items.EnsureAsync();
+            if (!loadedItems.Any())
+                return 1;
+
+            var ordinals = await Task.WhenAll(loadedItems.Select(item =>
+                ordinalProperty(item).EnsureAsync()));
+            return ordinals.Max(o => o.Value) + 1;
         }
     }
 }

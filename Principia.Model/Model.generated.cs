@@ -26,6 +26,11 @@ digraph "Principia.Model"
     Module__ordinal -> Module__ordinal [label="  *"]
     Module__title -> Module
     Module__title -> Module__title [label="  *"]
+    Clip -> Module
+    Clip__ordinal -> Clip
+    Clip__ordinal -> Clip__ordinal [label="  *"]
+    Clip__title -> Clip
+    Clip__title -> Clip__title [label="  *"]
 }
 **/
 
@@ -1344,6 +1349,18 @@ namespace Principia.Model
             }
             return _cacheQueryTitle;
 		}
+        private static Query _cacheQueryClips;
+
+        public static Query GetQueryClips()
+		{
+            if (_cacheQueryClips == null)
+            {
+			    _cacheQueryClips = new Query()
+		    		.JoinSuccessors(Clip.GetRoleModule())
+                ;
+            }
+            return _cacheQueryClips;
+		}
 
         // Predicates
 
@@ -1358,6 +1375,7 @@ namespace Principia.Model
         // Results
         private Result<Module__ordinal> _ordinal;
         private Result<Module__title> _title;
+        private Result<Clip> _clips;
 
         // Business constructor
         public Module(
@@ -1381,6 +1399,7 @@ namespace Principia.Model
         {
             _ordinal = new Result<Module__ordinal>(this, GetQueryOrdinal(), Module__ordinal.GetUnloadedInstance, Module__ordinal.GetNullInstance);
             _title = new Result<Module__title>(this, GetQueryTitle(), Module__title.GetUnloadedInstance, Module__title.GetNullInstance);
+            _clips = new Result<Clip>(this, GetQueryClips(), Clip.GetUnloadedInstance, Clip.GetNullInstance);
         }
 
         // Predecessor access
@@ -1394,6 +1413,10 @@ namespace Principia.Model
 
 
         // Query result access
+        public Result<Clip> Clips
+        {
+            get { return _clips; }
+        }
 
         // Mutable property access
         public TransientDisputable<Module__ordinal, int> Ordinal
@@ -1781,6 +1804,559 @@ namespace Principia.Model
 
     }
     
+    public partial class Clip : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Clip newFact = new Clip(memento);
+
+				// Create a memory stream from the memento data.
+				using (MemoryStream data = new MemoryStream(memento.Data))
+				{
+					using (BinaryReader output = new BinaryReader(data))
+					{
+						newFact._unique = (Guid)_fieldSerializerByType[typeof(Guid)].ReadData(output);
+					}
+				}
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Clip fact = (Clip)obj;
+				_fieldSerializerByType[typeof(Guid)].WriteData(output, fact._unique);
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Clip.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Clip.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Clip", 593728466);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Clip GetUnloadedInstance()
+        {
+            return new Clip((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Clip GetNullInstance()
+        {
+            return new Clip((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Clip> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Clip)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleModule;
+        public static Role GetRoleModule()
+        {
+            if (_cacheRoleModule == null)
+            {
+                _cacheRoleModule = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "module",
+			        Module._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleModule;
+        }
+
+        // Queries
+        private static Query _cacheQueryOrdinal;
+
+        public static Query GetQueryOrdinal()
+		{
+            if (_cacheQueryOrdinal == null)
+            {
+			    _cacheQueryOrdinal = new Query()
+    				.JoinSuccessors(Clip__ordinal.GetRoleClip(), Condition.WhereIsEmpty(Clip__ordinal.GetQueryIsCurrent())
+				)
+                ;
+            }
+            return _cacheQueryOrdinal;
+		}
+        private static Query _cacheQueryTitle;
+
+        public static Query GetQueryTitle()
+		{
+            if (_cacheQueryTitle == null)
+            {
+			    _cacheQueryTitle = new Query()
+    				.JoinSuccessors(Clip__title.GetRoleClip(), Condition.WhereIsEmpty(Clip__title.GetQueryIsCurrent())
+				)
+                ;
+            }
+            return _cacheQueryTitle;
+		}
+
+        // Predicates
+
+        // Predecessors
+        private PredecessorObj<Module> _module;
+
+        // Unique
+        private Guid _unique;
+
+        // Fields
+
+        // Results
+        private Result<Clip__ordinal> _ordinal;
+        private Result<Clip__title> _title;
+
+        // Business constructor
+        public Clip(
+            Module module
+            )
+        {
+            _unique = Guid.NewGuid();
+            InitializeResults();
+            _module = new PredecessorObj<Module>(this, GetRoleModule(), module);
+        }
+
+        // Hydration constructor
+        private Clip(FactMemento memento)
+        {
+            InitializeResults();
+            _module = new PredecessorObj<Module>(this, GetRoleModule(), memento, Module.GetUnloadedInstance, Module.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+            _ordinal = new Result<Clip__ordinal>(this, GetQueryOrdinal(), Clip__ordinal.GetUnloadedInstance, Clip__ordinal.GetNullInstance);
+            _title = new Result<Clip__title>(this, GetQueryTitle(), Clip__title.GetUnloadedInstance, Clip__title.GetNullInstance);
+        }
+
+        // Predecessor access
+        public Module Module
+        {
+            get { return IsNull ? Module.GetNullInstance() : _module.Fact; }
+        }
+
+        // Field access
+		public Guid Unique { get { return _unique; } }
+
+
+        // Query result access
+
+        // Mutable property access
+        public TransientDisputable<Clip__ordinal, int> Ordinal
+        {
+            get { return _ordinal.AsTransientDisputable(fact => fact.Value); }
+			set
+			{
+                Community.Perform(async delegate()
+                {
+                    var current = (await _ordinal.EnsureAsync()).ToList();
+                    if (current.Count != 1 || !object.Equals(current[0].Value, value.Value))
+                    {
+                        await Community.AddFactAsync(new Clip__ordinal(this, _ordinal, value.Value));
+                    }
+                });
+			}
+        }
+        public TransientDisputable<Clip__title, string> Title
+        {
+            get { return _title.AsTransientDisputable(fact => fact.Value); }
+			set
+			{
+                Community.Perform(async delegate()
+                {
+                    var current = (await _title.EnsureAsync()).ToList();
+                    if (current.Count != 1 || !object.Equals(current[0].Value, value.Value))
+                    {
+                        await Community.AddFactAsync(new Clip__title(this, _title, value.Value));
+                    }
+                });
+			}
+        }
+
+    }
+    
+    public partial class Clip__ordinal : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Clip__ordinal newFact = new Clip__ordinal(memento);
+
+				// Create a memory stream from the memento data.
+				using (MemoryStream data = new MemoryStream(memento.Data))
+				{
+					using (BinaryReader output = new BinaryReader(data))
+					{
+						newFact._value = (int)_fieldSerializerByType[typeof(int)].ReadData(output);
+					}
+				}
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Clip__ordinal fact = (Clip__ordinal)obj;
+				_fieldSerializerByType[typeof(int)].WriteData(output, fact._value);
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Clip__ordinal.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Clip__ordinal.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Clip__ordinal", 1139792036);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Clip__ordinal GetUnloadedInstance()
+        {
+            return new Clip__ordinal((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Clip__ordinal GetNullInstance()
+        {
+            return new Clip__ordinal((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Clip__ordinal> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Clip__ordinal)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleClip;
+        public static Role GetRoleClip()
+        {
+            if (_cacheRoleClip == null)
+            {
+                _cacheRoleClip = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "clip",
+			        Clip._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleClip;
+        }
+        private static Role _cacheRolePrior;
+        public static Role GetRolePrior()
+        {
+            if (_cacheRolePrior == null)
+            {
+                _cacheRolePrior = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "prior",
+			        Clip__ordinal._correspondenceFactType,
+			        false));
+            }
+            return _cacheRolePrior;
+        }
+
+        // Queries
+        private static Query _cacheQueryIsCurrent;
+
+        public static Query GetQueryIsCurrent()
+		{
+            if (_cacheQueryIsCurrent == null)
+            {
+			    _cacheQueryIsCurrent = new Query()
+		    		.JoinSuccessors(Clip__ordinal.GetRolePrior())
+                ;
+            }
+            return _cacheQueryIsCurrent;
+		}
+
+        // Predicates
+        public static Condition IsCurrent = Condition.WhereIsEmpty(GetQueryIsCurrent());
+
+        // Predecessors
+        private PredecessorObj<Clip> _clip;
+        private PredecessorList<Clip__ordinal> _prior;
+
+        // Fields
+        private int _value;
+
+        // Results
+
+        // Business constructor
+        public Clip__ordinal(
+            Clip clip
+            ,IEnumerable<Clip__ordinal> prior
+            ,int value
+            )
+        {
+            InitializeResults();
+            _clip = new PredecessorObj<Clip>(this, GetRoleClip(), clip);
+            _prior = new PredecessorList<Clip__ordinal>(this, GetRolePrior(), prior);
+            _value = value;
+        }
+
+        // Hydration constructor
+        private Clip__ordinal(FactMemento memento)
+        {
+            InitializeResults();
+            _clip = new PredecessorObj<Clip>(this, GetRoleClip(), memento, Clip.GetUnloadedInstance, Clip.GetNullInstance);
+            _prior = new PredecessorList<Clip__ordinal>(this, GetRolePrior(), memento, Clip__ordinal.GetUnloadedInstance, Clip__ordinal.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Clip Clip
+        {
+            get { return IsNull ? Clip.GetNullInstance() : _clip.Fact; }
+        }
+        public PredecessorList<Clip__ordinal> Prior
+        {
+            get { return _prior; }
+        }
+
+        // Field access
+        public int Value
+        {
+            get { return _value; }
+        }
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
+    public partial class Clip__title : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Clip__title newFact = new Clip__title(memento);
+
+				// Create a memory stream from the memento data.
+				using (MemoryStream data = new MemoryStream(memento.Data))
+				{
+					using (BinaryReader output = new BinaryReader(data))
+					{
+						newFact._value = (string)_fieldSerializerByType[typeof(string)].ReadData(output);
+					}
+				}
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Clip__title fact = (Clip__title)obj;
+				_fieldSerializerByType[typeof(string)].WriteData(output, fact._value);
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Clip__title.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Clip__title.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Clip__title", 1139792024);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Clip__title GetUnloadedInstance()
+        {
+            return new Clip__title((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Clip__title GetNullInstance()
+        {
+            return new Clip__title((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Clip__title> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Clip__title)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleClip;
+        public static Role GetRoleClip()
+        {
+            if (_cacheRoleClip == null)
+            {
+                _cacheRoleClip = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "clip",
+			        Clip._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleClip;
+        }
+        private static Role _cacheRolePrior;
+        public static Role GetRolePrior()
+        {
+            if (_cacheRolePrior == null)
+            {
+                _cacheRolePrior = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "prior",
+			        Clip__title._correspondenceFactType,
+			        false));
+            }
+            return _cacheRolePrior;
+        }
+
+        // Queries
+        private static Query _cacheQueryIsCurrent;
+
+        public static Query GetQueryIsCurrent()
+		{
+            if (_cacheQueryIsCurrent == null)
+            {
+			    _cacheQueryIsCurrent = new Query()
+		    		.JoinSuccessors(Clip__title.GetRolePrior())
+                ;
+            }
+            return _cacheQueryIsCurrent;
+		}
+
+        // Predicates
+        public static Condition IsCurrent = Condition.WhereIsEmpty(GetQueryIsCurrent());
+
+        // Predecessors
+        private PredecessorObj<Clip> _clip;
+        private PredecessorList<Clip__title> _prior;
+
+        // Fields
+        private string _value;
+
+        // Results
+
+        // Business constructor
+        public Clip__title(
+            Clip clip
+            ,IEnumerable<Clip__title> prior
+            ,string value
+            )
+        {
+            InitializeResults();
+            _clip = new PredecessorObj<Clip>(this, GetRoleClip(), clip);
+            _prior = new PredecessorList<Clip__title>(this, GetRolePrior(), prior);
+            _value = value;
+        }
+
+        // Hydration constructor
+        private Clip__title(FactMemento memento)
+        {
+            InitializeResults();
+            _clip = new PredecessorObj<Clip>(this, GetRoleClip(), memento, Clip.GetUnloadedInstance, Clip.GetNullInstance);
+            _prior = new PredecessorList<Clip__title>(this, GetRolePrior(), memento, Clip__title.GetUnloadedInstance, Clip__title.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Clip Clip
+        {
+            get { return IsNull ? Clip.GetNullInstance() : _clip.Fact; }
+        }
+        public PredecessorList<Clip__title> Prior
+        {
+            get { return _prior; }
+        }
+
+        // Field access
+        public string Value
+        {
+            get { return _value; }
+        }
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
 
 	public class CorrespondenceModel : ICorrespondenceModel
 	{
@@ -1851,6 +2427,9 @@ namespace Principia.Model
 			community.AddQuery(
 				Module._correspondenceFactType,
 				Module.GetQueryTitle().QueryDefinition);
+			community.AddQuery(
+				Module._correspondenceFactType,
+				Module.GetQueryClips().QueryDefinition);
 			community.AddType(
 				Module__ordinal._correspondenceFactType,
 				new Module__ordinal.CorrespondenceFactFactory(fieldSerializerByType),
@@ -1865,6 +2444,30 @@ namespace Principia.Model
 			community.AddQuery(
 				Module__title._correspondenceFactType,
 				Module__title.GetQueryIsCurrent().QueryDefinition);
+			community.AddType(
+				Clip._correspondenceFactType,
+				new Clip.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Clip._correspondenceFactType }));
+			community.AddQuery(
+				Clip._correspondenceFactType,
+				Clip.GetQueryOrdinal().QueryDefinition);
+			community.AddQuery(
+				Clip._correspondenceFactType,
+				Clip.GetQueryTitle().QueryDefinition);
+			community.AddType(
+				Clip__ordinal._correspondenceFactType,
+				new Clip__ordinal.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Clip__ordinal._correspondenceFactType }));
+			community.AddQuery(
+				Clip__ordinal._correspondenceFactType,
+				Clip__ordinal.GetQueryIsCurrent().QueryDefinition);
+			community.AddType(
+				Clip__title._correspondenceFactType,
+				new Clip__title.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Clip__title._correspondenceFactType }));
+			community.AddQuery(
+				Clip__title._correspondenceFactType,
+				Clip__title.GetQueryIsCurrent().QueryDefinition);
 		}
 	}
 }

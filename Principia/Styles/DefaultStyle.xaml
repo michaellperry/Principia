@@ -4,5 +4,6 @@
     xmlns:local="using:Principia">
 	<SolidColorBrush x:Key="SelectedModuleBackgroundBrush" Color="#FF783573"/>
 	<SolidColorBrush x:Key="ModuleBackgroundBrush" Color="#FF4B2348"/>
+	<SolidColorBrush x:Key="CourseBackgroundBrush" Color="#FF381A36"/>
     
 </ResourceDictionary>
