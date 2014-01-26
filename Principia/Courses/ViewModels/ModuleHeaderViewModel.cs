@@ -26,7 +26,7 @@ namespace Principia.Courses.ViewModels
 
         public string Title
         {
-            get { return _module.Title ?? "<<New module>>"; }
+            get { return _module.Title.Value ?? "<<New module>>"; }
         }
 
         public bool IsSelected

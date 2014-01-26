@@ -113,11 +113,13 @@
     <Compile Include="Courses\Factory.cs" />
     <Compile Include="Courses\Models\ClipSelectionModel.cs" />
     <Compile Include="Courses\Models\CourseSelectionModel.cs" />
+    <Compile Include="Courses\ViewModels\ClipDetailViewModel.cs" />
     <Compile Include="Courses\ViewModels\ClipHeaderViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseDetailViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseListViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseOutlineViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseViewModel.cs" />
+    <Compile Include="Courses\ViewModels\ModuleDetailViewModel.cs" />
     <Compile Include="Courses\ViewModels\ModuleHeaderViewModel.cs" />
     <Compile Include="Courses\ViewModels\SelectionState.cs" />
     <Compile Include="Courses\ViewModels\TagViewModel.cs" />

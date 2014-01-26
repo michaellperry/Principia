@@ -11,7 +11,7 @@ namespace Principia
     {
         public static async Task Create(
             Individual individual,
-            Courses.Models.CourseSelectionModel courseSelection, Principia.Courses.Models.ClipSelectionModel clipSelection)
+            Courses.Models.CourseSelectionModel courseSelection)
         {
             for (int i = 0; i < 20; ++i)
             {
@@ -35,9 +35,9 @@ namespace Principia
             xamlPatterns.Description =
                 "Build applications at a higher level of abstraction. This set of interrelated patterns solves common UI application design problems in a way that keeps both developers and designers happy. Build applications faster, and make them more maintainable, on any XAML stack.";
 
-            await CreateCourseOutline(xamlPatterns, clipSelection);
-
             courseSelection.SelectedCourse = xamlPatterns;
+
+            await CreateCourseOutline(xamlPatterns, courseSelection.ClipSelection);
         }
 
         private static async Task<Course> CourseBy(Individual individual, string title, string shortDescription)

@@ -11,21 +11,17 @@ namespace Principia.ViewModels
     {
         private readonly SynchronizationService _synchronizationService;
         private readonly Courses.Models.CourseSelectionModel _courseSelection;
-        private readonly Principia.Courses.Models.ClipSelectionModel _clipSelection;
         private NavigationService _navigationService;
 
         public ViewModelLocator()
         {
             _synchronizationService = new SynchronizationService();
             _courseSelection = new Courses.Models.CourseSelectionModel();
-            _clipSelection = new Courses.Models.ClipSelectionModel();
 
             if (!DesignMode)
                 _synchronizationService.Initialize();
             else
-                _synchronizationService.InitializeDesignMode(
-                    _courseSelection,
-                    _clipSelection);
+                _synchronizationService.InitializeDesignMode(_courseSelection);
         }
 
         public void InitializeNavigationService(INavigate value)
@@ -55,7 +51,8 @@ namespace Principia.ViewModels
                     else
                     {
                         return Courses.Factory.CourseOutlineViewModel(
-                            _courseSelection.SelectedCourse, _clipSelection);
+                            _courseSelection.SelectedCourse,
+                            _courseSelection.ClipSelection);
                     }
                 });
             }
@@ -67,11 +64,20 @@ namespace Principia.ViewModels
             {
                 return ViewModel(delegate
                 {
-                    if (_courseSelection.SelectedCourse == null)
+                    var clipSelection = _courseSelection.ClipSelection;
+                    if (clipSelection == null)
                         return null;
-                    else
-                        return Courses.Factory.CourseDetailViewModel(
-                            _courseSelection.SelectedCourse);
+
+                    if (clipSelection.SelectedClip != null)
+                        return Courses.Factory.ClipDetailViewModel(
+                            clipSelection.SelectedClip);
+
+                    if (clipSelection.SelectedModule != null)
+                        return Courses.Factory.ModuleDetailViewModel(
+                            clipSelection.SelectedModule);
+
+                    return Courses.Factory.CourseDetailViewModel(
+                        _courseSelection.SelectedCourse);
                 });
             }
         }

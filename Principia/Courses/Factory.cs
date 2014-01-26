@@ -23,7 +23,9 @@ namespace Principia.Courses
                 navigationService);
         }
 
-        public static CourseOutlineViewModel CourseOutlineViewModel(Course course, ClipSelectionModel clipSelection)
+        public static CourseOutlineViewModel CourseOutlineViewModel(
+            Course course,
+            ClipSelectionModel clipSelection)
         {
             return new CourseOutlineViewModel(course, clipSelection,
                 module => new ModuleHeaderViewModel(module, clipSelection,
@@ -33,6 +35,16 @@ namespace Principia.Courses
         public static CourseDetailViewModel CourseDetailViewModel(Course course)
         {
             return new CourseDetailViewModel(course);
+        }
+
+        public static ModuleDetailViewModel ModuleDetailViewModel(Module module)
+        {
+            return new ModuleDetailViewModel(module);
+        }
+
+        public static ClipDetailViewModel ClipDetailViewModel(Clip clip)
+        {
+            return new ClipDetailViewModel(clip);
         }
     }
 }
