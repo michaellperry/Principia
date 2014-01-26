@@ -29,7 +29,7 @@ namespace Principia.Courses
         {
             return new CourseOutlineViewModel(course, clipSelection,
                 module => new ModuleHeaderViewModel(module, clipSelection,
-                    clip => new ClipHeaderViewModel(clip)));
+                    clip => new ClipHeaderViewModel(module, clip, clipSelection)));
         }
 
         public static CourseDetailViewModel CourseDetailViewModel(Course course)

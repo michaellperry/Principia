@@ -30,6 +30,22 @@ namespace Principia.Courses.ViewModels
             get { return _course.Title; }
         }
 
+        public bool IsSelected
+        {
+            get
+            {
+                return
+                    _clipSelection.SelectedModule == null &&
+                    _clipSelection.SelectedClip == null;
+            }
+        }
+
+        public void Select()
+        {
+            _clipSelection.SelectedModule = null;
+            _clipSelection.SelectedClip = null;
+        }
+
         public IEnumerable<ModuleHeaderViewModel> Modules
         {
             get

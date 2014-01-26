@@ -7,24 +7,42 @@
     x:Class="Principia.Courses.Views.ModuleHeaderView"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    Loaded="UserControl_Loaded"
+    Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <DataTemplate x:Key="ClipHeaderDataTemplate">
-        	<Grid>
-        		<TextBlock HorizontalAlignment="Left" Text="{Binding Title}" VerticalAlignment="Top" Margin="5" FontSize="26.667"/>
-        	</Grid>
+            <local:ClipHeaderView />
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
 
-		<Border Margin="5" Background="{StaticResource ModuleBackgroundBrush}"/>
-		<Border x:Name="SelectedBorder" Background="{StaticResource SelectedModuleBackgroundBrush}" Margin="5,5,-15,5"/>
+        <Border 
+            Margin="5" 
+            Background="{StaticResource ModuleBackgroundBrush}" 
+            Tapped="ModuleHeader_Tapped"/>
 
 		<StackPanel d:DataContext="{d:DesignData /SampleData/ModuleHeaderViewModelSampleData.xaml}" VerticalAlignment="Top" Margin="5">
-			<TextBlock HorizontalAlignment="Left" Text="{Binding Title}" VerticalAlignment="Top" FontSize="26.667" Margin="5"/>
+			<Grid>
+				<Border 
+					x:Name="SelectedBorder" 
+					Background="{StaticResource SelectedModuleBackgroundBrush}" 
+					Margin="0,0,-20,0" IsHitTestVisible="False"/>
+				<TextBlock 
+					HorizontalAlignment="Left" 
+					Text="{Binding Title}" 
+					VerticalAlignment="Top" 
+					FontSize="26.667" 
+					Margin="5"
+					IsHitTestVisible="False" />
+			</Grid>
 			<StackPanel x:Name="Clips">
-				<ItemsControl Margin="15,0,0,0" VerticalAlignment="Top" ItemsSource="{Binding Clips}" ItemTemplate="{StaticResource ClipHeaderDataTemplate}"/>
+				<ItemsControl 
+                    Margin="15,0,0,0" 
+                    VerticalAlignment="Top" 
+                    ItemsSource="{Binding Clips}" 
+                    ItemTemplate="{StaticResource ClipHeaderDataTemplate}"/>
 			</StackPanel>
 		</StackPanel>
 	</Grid>

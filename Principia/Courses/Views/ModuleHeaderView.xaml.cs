@@ -1,73 +1,76 @@
 ﻿using Principia.Courses.ViewModels;
-using System.ComponentModel;
+using UpdateControls.Fields;
 using UpdateControls.XAML;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using XamlVisibility = Windows.UI.Xaml.Visibility;
 
 namespace Principia.Courses.Views
 {
     public sealed partial class ModuleHeaderView : UserControl
     {
-        private INotifyPropertyChanged _inpc;
+        private ModuleHeaderViewModel _viewModel;
+        private Binding _isOpen;
+        private Binding _isSelected;
 
         public ModuleHeaderView()
         {
             InitializeComponent();
-
-            DataContextChanged += ModuleHeaderView_DataContextChanged;
         }
 
-        void ModuleHeaderView_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_inpc != null)
-            {
-                _inpc.PropertyChanged -= ViewModel_PropertyChanged;
-            }
-
-            var inpc = args.NewValue as INotifyPropertyChanged;
-            if (inpc != null)
-            {
-                inpc.PropertyChanged += ViewModel_PropertyChanged;
-                UpdateIsSelected();
-            }
-
-            _inpc = inpc;
-        }
-
-        void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "IsSelected")
-            {
-                UpdateIsSelected();
-            }
-        }
-
-        private void UpdateIsSelected()
-        {
-            var viewModel = ForView.Unwrap<ModuleHeaderViewModel>(DataContext);
-            if (viewModel != null)
-            {
-                if (viewModel.IsSelected)
+            _viewModel = ForView.Unwrap<ModuleHeaderViewModel>(DataContext);
+            _isOpen = Binding.Bind(() => _viewModel != null && _viewModel.IsOpen,
+                delegate(bool open)
                 {
-                    ShowClips();
-                }
-                else
+                    if (open)
+                        ShowClips();
+                    else
+                        HideClips();
+                });
+            _isSelected = Binding.Bind(() => _viewModel != null && _viewModel.IsSelected,
+                delegate(bool selected)
                 {
-                    HideClips();
-                }
-            }
+                    if (selected)
+                        ShowSelection();
+                    else
+                        HideSelection();
+                });
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _isOpen.Dispose();
+            _isSelected.Dispose();
         }
 
         private void ShowClips()
         {
-            Clips.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            SelectedBorder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            Clips.Visibility = XamlVisibility.Visible;
         }
 
         private void HideClips()
         {
-            Clips.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            SelectedBorder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            Clips.Visibility = XamlVisibility.Collapsed;
+        }
+
+        private void ShowSelection()
+        {
+            SelectedBorder.Visibility = XamlVisibility.Visible;
+        }
+
+        private void HideSelection()
+        {
+            SelectedBorder.Visibility = XamlVisibility.Collapsed;
+        }
+
+        private void ModuleHeader_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (_viewModel != null)
+                _viewModel.Select();
+            e.Handled = true;
         }
     }
 }

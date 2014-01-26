@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Principia.Model;
 using Principia.Courses.Models;
+using UpdateControls;
 
 namespace Principia.Courses.ViewModels
 {
@@ -29,6 +30,11 @@ namespace Principia.Courses.ViewModels
             get { return _module.Title.Value ?? "<<New module>>"; }
         }
 
+        public bool IsOpen
+        {
+            get { return _clipSelection.SelectedModule == _module; }
+        }
+
         public bool IsSelected
         {
             get
@@ -37,6 +43,12 @@ namespace Principia.Courses.ViewModels
                     _clipSelection.SelectedModule == _module &&
                     _clipSelection.SelectedClip == null;
             }
+        }
+
+        public void Select()
+        {
+            _clipSelection.SelectedModule = _module;
+            _clipSelection.SelectedClip = null;
         }
 
         public IEnumerable<ClipHeaderViewModel> Clips

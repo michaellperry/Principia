@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Principia.Courses.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,26 +14,25 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Principia.Courses.ViewModels;
 using XamlVisibility = Windows.UI.Xaml.Visibility;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Principia.Courses.Views
 {
-    public sealed partial class CourseOutlineView : UserControl
+    public sealed partial class ClipHeaderView : UserControl
     {
-        private CourseOutlineViewModel _viewModel;
+        private ClipHeaderViewModel _viewModel;
         private Binding _isSelected;
 
-        public CourseOutlineView()
+        public ClipHeaderView()
         {
             this.InitializeComponent();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            _viewModel = ForView.Unwrap<CourseOutlineViewModel>(DataContext);
+            _viewModel = ForView.Unwrap<ClipHeaderViewModel>(DataContext);
             _isSelected = Binding.Bind(() => _viewModel != null && _viewModel.IsSelected,
                 delegate(bool selected)
                 {
@@ -48,10 +48,11 @@ namespace Principia.Courses.Views
             _isSelected.Dispose();
         }
 
-        private void Overview_Tapped(object sender, TappedRoutedEventArgs e)
+        private void Clip_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (_viewModel != null)
                 _viewModel.Select();
+            e.Handled = true;
         }
 
         private void ShowSelection()
