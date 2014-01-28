@@ -26,11 +26,14 @@ digraph "Principia.Model"
     Module__ordinal -> Module__ordinal [label="  *"]
     Module__title -> Module
     Module__title -> Module__title [label="  *"]
-    Clip -> Module
+    Clip -> Course
     Clip__ordinal -> Clip
     Clip__ordinal -> Clip__ordinal [label="  *"]
     Clip__title -> Clip
     Clip__title -> Clip__title [label="  *"]
+    ClipModule -> Clip
+    ClipModule -> Module
+    ClipModule -> ClipModule [label="  *"]
 }
 **/
 
@@ -1356,7 +1359,9 @@ namespace Principia.Model
             if (_cacheQueryClips == null)
             {
 			    _cacheQueryClips = new Query()
-		    		.JoinSuccessors(Clip.GetRoleModule())
+    				.JoinSuccessors(ClipModule.GetRoleModule(), Condition.WhereIsEmpty(ClipModule.GetQueryIsCurrent())
+				)
+		    		.JoinPredecessors(ClipModule.GetRoleClip())
                 ;
             }
             return _cacheQueryClips;
@@ -1851,7 +1856,7 @@ namespace Principia.Model
 
 		// Type
 		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
-			"Principia.Model.Clip", 593728466);
+			"Principia.Model.Clip", 517634410);
 
 		protected override CorrespondenceFactType GetCorrespondenceFactType()
 		{
@@ -1879,18 +1884,18 @@ namespace Principia.Model
         }
 
         // Roles
-        private static Role _cacheRoleModule;
-        public static Role GetRoleModule()
+        private static Role _cacheRoleCourse;
+        public static Role GetRoleCourse()
         {
-            if (_cacheRoleModule == null)
+            if (_cacheRoleCourse == null)
             {
-                _cacheRoleModule = new Role(new RoleMemento(
+                _cacheRoleCourse = new Role(new RoleMemento(
 			        _correspondenceFactType,
-			        "module",
-			        Module._correspondenceFactType,
+			        "course",
+			        Course._correspondenceFactType,
 			        false));
             }
-            return _cacheRoleModule;
+            return _cacheRoleCourse;
         }
 
         // Queries
@@ -1924,7 +1929,7 @@ namespace Principia.Model
         // Predicates
 
         // Predecessors
-        private PredecessorObj<Module> _module;
+        private PredecessorObj<Course> _course;
 
         // Unique
         private Guid _unique;
@@ -1937,19 +1942,19 @@ namespace Principia.Model
 
         // Business constructor
         public Clip(
-            Module module
+            Course course
             )
         {
             _unique = Guid.NewGuid();
             InitializeResults();
-            _module = new PredecessorObj<Module>(this, GetRoleModule(), module);
+            _course = new PredecessorObj<Course>(this, GetRoleCourse(), course);
         }
 
         // Hydration constructor
         private Clip(FactMemento memento)
         {
             InitializeResults();
-            _module = new PredecessorObj<Module>(this, GetRoleModule(), memento, Module.GetUnloadedInstance, Module.GetNullInstance);
+            _course = new PredecessorObj<Course>(this, GetRoleCourse(), memento, Course.GetUnloadedInstance, Course.GetNullInstance);
         }
 
         // Result initializer
@@ -1960,9 +1965,9 @@ namespace Principia.Model
         }
 
         // Predecessor access
-        public Module Module
+        public Course Course
         {
-            get { return IsNull ? Module.GetNullInstance() : _module.Fact; }
+            get { return IsNull ? Course.GetNullInstance() : _course.Fact; }
         }
 
         // Field access
@@ -2357,6 +2362,187 @@ namespace Principia.Model
 
     }
     
+    public partial class ClipModule : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				ClipModule newFact = new ClipModule(memento);
+
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				ClipModule fact = (ClipModule)obj;
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return ClipModule.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return ClipModule.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.ClipModule", 855963584);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static ClipModule GetUnloadedInstance()
+        {
+            return new ClipModule((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static ClipModule GetNullInstance()
+        {
+            return new ClipModule((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<ClipModule> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (ClipModule)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleClip;
+        public static Role GetRoleClip()
+        {
+            if (_cacheRoleClip == null)
+            {
+                _cacheRoleClip = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "clip",
+			        Clip._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleClip;
+        }
+        private static Role _cacheRoleModule;
+        public static Role GetRoleModule()
+        {
+            if (_cacheRoleModule == null)
+            {
+                _cacheRoleModule = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "module",
+			        Module._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleModule;
+        }
+        private static Role _cacheRolePrior;
+        public static Role GetRolePrior()
+        {
+            if (_cacheRolePrior == null)
+            {
+                _cacheRolePrior = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "prior",
+			        ClipModule._correspondenceFactType,
+			        false));
+            }
+            return _cacheRolePrior;
+        }
+
+        // Queries
+        private static Query _cacheQueryIsCurrent;
+
+        public static Query GetQueryIsCurrent()
+		{
+            if (_cacheQueryIsCurrent == null)
+            {
+			    _cacheQueryIsCurrent = new Query()
+		    		.JoinSuccessors(ClipModule.GetRolePrior())
+                ;
+            }
+            return _cacheQueryIsCurrent;
+		}
+
+        // Predicates
+        public static Condition IsCurrent = Condition.WhereIsEmpty(GetQueryIsCurrent());
+
+        // Predecessors
+        private PredecessorObj<Clip> _clip;
+        private PredecessorObj<Module> _module;
+        private PredecessorList<ClipModule> _prior;
+
+        // Fields
+
+        // Results
+
+        // Business constructor
+        public ClipModule(
+            Clip clip
+            ,Module module
+            ,IEnumerable<ClipModule> prior
+            )
+        {
+            InitializeResults();
+            _clip = new PredecessorObj<Clip>(this, GetRoleClip(), clip);
+            _module = new PredecessorObj<Module>(this, GetRoleModule(), module);
+            _prior = new PredecessorList<ClipModule>(this, GetRolePrior(), prior);
+        }
+
+        // Hydration constructor
+        private ClipModule(FactMemento memento)
+        {
+            InitializeResults();
+            _clip = new PredecessorObj<Clip>(this, GetRoleClip(), memento, Clip.GetUnloadedInstance, Clip.GetNullInstance);
+            _module = new PredecessorObj<Module>(this, GetRoleModule(), memento, Module.GetUnloadedInstance, Module.GetNullInstance);
+            _prior = new PredecessorList<ClipModule>(this, GetRolePrior(), memento, ClipModule.GetUnloadedInstance, ClipModule.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Clip Clip
+        {
+            get { return IsNull ? Clip.GetNullInstance() : _clip.Fact; }
+        }
+        public Module Module
+        {
+            get { return IsNull ? Module.GetNullInstance() : _module.Fact; }
+        }
+        public PredecessorList<ClipModule> Prior
+        {
+            get { return _prior; }
+        }
+
+        // Field access
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
 
 	public class CorrespondenceModel : ICorrespondenceModel
 	{
@@ -2468,6 +2654,13 @@ namespace Principia.Model
 			community.AddQuery(
 				Clip__title._correspondenceFactType,
 				Clip__title.GetQueryIsCurrent().QueryDefinition);
+			community.AddType(
+				ClipModule._correspondenceFactType,
+				new ClipModule.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { ClipModule._correspondenceFactType }));
+			community.AddQuery(
+				ClipModule._correspondenceFactType,
+				ClipModule.GetQueryIsCurrent().QueryDefinition);
 		}
 	}
 }

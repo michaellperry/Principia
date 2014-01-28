@@ -42,8 +42,10 @@ namespace Principia.Courses.Views
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            _isOpen.Dispose();
-            _isSelected.Dispose();
+            if (_isOpen != null)
+                _isOpen.Dispose();
+            if (_isSelected != null)
+                _isSelected.Dispose();
         }
 
         private void ShowClips()

@@ -22,7 +22,10 @@ namespace Principia.Model
 
         public static async Task<Clip> NewClip(this Module module)
         {
-            var clip = await module.Community.AddFactAsync(new Clip(module));
+            var course = await module.Course.EnsureAsync();
+            var clip = await module.Community.AddFactAsync(new Clip(course));
+            await module.Community.AddFactAsync(new ClipModule(
+                clip, module, Enumerable.Empty<ClipModule>()));
             return clip;
         }
 

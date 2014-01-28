@@ -45,7 +45,8 @@ namespace Principia.Courses.Views
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            _isSelected.Dispose();
+            if (_isSelected != null)
+                _isSelected.Dispose();
         }
 
         private void Clip_Tapped(object sender, TappedRoutedEventArgs e)

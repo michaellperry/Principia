@@ -54,16 +54,30 @@ mutable:
 
 query:
 	Clip* clips {
-		Clip c : c.module = this
+		ClipModule cm : cm.module = this
+			where cm.isCurrent
+		Clip c : c = cm.clip
 	}
 }
 
 fact Clip {
 key:
 	unique;
-	Module module;
+	Course course;
 
 mutable:
 	int ordinal;
 	string title;
+}
+
+fact ClipModule {
+key:
+	Clip clip;
+	Module module;
+	ClipModule* prior;
+
+query:
+	bool isCurrent {
+		not exists ClipModule next : next.prior = this
+	}
 }
