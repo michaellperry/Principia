@@ -5,6 +5,7 @@
     <ResourceDictionary>
     	<ResourceDictionary.MergedDictionaries>
     		<ResourceDictionary Source="Styles/DefaultStyle.xaml" />
+    		<ResourceDictionary Source="Courses/Selectors/ViewTemplates.xaml" />
     	</ResourceDictionary.MergedDictionaries>
       
     <vm:ViewModelLocator x:Key="Locator" /></ResourceDictionary>

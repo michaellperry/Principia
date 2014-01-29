@@ -1,0 +1,14 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:views="using:Principia.Courses.Views">
+    <DataTemplate x:Key="CourseDataTemplate">
+        <views:CourseDetailView />
+    </DataTemplate>
+    <DataTemplate x:Key="ModuleDataTemplate">
+        <views:ModuleDetailView />
+    </DataTemplate>
+    <DataTemplate x:Key="ClipDataTemplate">
+        <views:ClipDetailView />
+    </DataTemplate>
+</ResourceDictionary>

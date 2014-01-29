@@ -113,6 +113,7 @@
     <Compile Include="Courses\Factory.cs" />
     <Compile Include="Courses\Models\ClipSelectionModel.cs" />
     <Compile Include="Courses\Models\CourseSelectionModel.cs" />
+    <Compile Include="Courses\Selectors\DetailViewSelector.cs" />
     <Compile Include="Courses\ViewModels\ClipDetailViewModel.cs" />
     <Compile Include="Courses\ViewModels\ClipHeaderViewModel.cs" />
     <Compile Include="Courses\ViewModels\CourseDetailViewModel.cs" />
@@ -123,6 +124,9 @@
     <Compile Include="Courses\ViewModels\ModuleHeaderViewModel.cs" />
     <Compile Include="Courses\ViewModels\SelectionState.cs" />
     <Compile Include="Courses\ViewModels\TagViewModel.cs" />
+    <Compile Include="Courses\Views\ClipDetailView.xaml.cs">
+      <DependentUpon>ClipDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Courses\Views\ClipHeaderView.xaml.cs">
       <DependentUpon>ClipHeaderView.xaml</DependentUpon>
     </Compile>
@@ -137,6 +141,9 @@
     </Compile>
     <Compile Include="Courses\Views\CoursePage.xaml.cs">
       <DependentUpon>CoursePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Courses\Views\ModuleDetailView.xaml.cs">
+      <DependentUpon>ModuleDetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Courses\Views\ModuleHeaderView.xaml.cs">
       <DependentUpon>ModuleHeaderView.xaml</DependentUpon>
@@ -169,6 +176,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Courses\Selectors\ViewTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Courses\Views\ClipDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Courses\Views\ClipHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -186,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Courses\Views\CoursePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Courses\Views\ModuleDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
