@@ -26,7 +26,7 @@ namespace Principia
                 "Patterns for Building Distributed Systems for the Enterprise",
                 "Model driven architectures, CQRS, Event Sourcing, and Domain Driven Design for the rest of us.");
             var xamlPatterns = await CourseBy(individual,
-                "XAML Patterns",
+                "Cryptography Fundamentals for Java and .NET Developers",
                 "In the spirit of Design Patterns by the Gang of Four, XAML Patterns defines a pattern language for rich client applications.");
             await CourseBy(individual,
                 "The Parse Mobile Backend with Windows 8",
@@ -42,10 +42,9 @@ namespace Principia
 
         private static async Task<Course> CourseBy(Individual individual, string title, string shortDescription)
         {
-            var course = await individual.Community.AddFactAsync(new Course());
+            var course = await individual.NewCourse();
             course.Title = title;
             course.ShortDescription = shortDescription;
-            await individual.Community.AddFactAsync(new Share(individual, course));
             return course;
         }
 

@@ -33,8 +33,8 @@ namespace Principia.Courses.ViewModels
             get
             {
                 return
-                    from share in _individual.SharedCourses
-                    select _createCourseViewModel(share.Course);
+                    from accept in _individual.CoursesAccepted
+                    select _createCourseViewModel(accept.Grant.Course);
             }
         }
 

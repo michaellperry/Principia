@@ -12,21 +12,24 @@ using System.IO;
 digraph "Principia.Model"
 {
     rankdir=BT
+    Request -> Individual [color="red"]
+    Request -> Token [color="red"]
+    Grant -> Request
+    Grant -> Course
+    Accept -> Grant
+    AcceptDelete -> Accept
     Course__title -> Course
     Course__title -> Course__title [label="  *"]
     Course__shortDescription -> Course
     Course__shortDescription -> Course__shortDescription [label="  *"]
     Course__description -> Course
     Course__description -> Course__description [label="  *"]
-    Share -> Individual
-    Share -> Course
-    ShareRevoke -> Share
-    Module -> Course
+    Module -> Course [color="red"]
     Module__ordinal -> Module
     Module__ordinal -> Module__ordinal [label="  *"]
     Module__title -> Module
     Module__title -> Module__title [label="  *"]
-    Clip -> Course
+    Clip -> Course [color="red"]
     Clip__ordinal -> Clip
     Clip__ordinal -> Clip__ordinal [label="  *"]
     Clip__title -> Clip
@@ -116,18 +119,20 @@ namespace Principia.Model
         // Roles
 
         // Queries
-        private static Query _cacheQuerySharedCourses;
+        private static Query _cacheQueryCoursesAccepted;
 
-        public static Query GetQuerySharedCourses()
+        public static Query GetQueryCoursesAccepted()
 		{
-            if (_cacheQuerySharedCourses == null)
+            if (_cacheQueryCoursesAccepted == null)
             {
-			    _cacheQuerySharedCourses = new Query()
-    				.JoinSuccessors(Share.GetRoleIndividual(), Condition.WhereIsEmpty(Share.GetQueryIsCurrent())
+			    _cacheQueryCoursesAccepted = new Query()
+		    		.JoinSuccessors(Request.GetRoleIndividual())
+		    		.JoinSuccessors(Grant.GetRoleRequest())
+    				.JoinSuccessors(Accept.GetRoleGrant(), Condition.WhereIsEmpty(Accept.GetQueryIsDeleted())
 				)
                 ;
             }
-            return _cacheQuerySharedCourses;
+            return _cacheQueryCoursesAccepted;
 		}
 
         // Predicates
@@ -138,7 +143,7 @@ namespace Principia.Model
         private string _anonymousId;
 
         // Results
-        private Result<Share> _sharedCourses;
+        private Result<Accept> _coursesAccepted;
 
         // Business constructor
         public Individual(
@@ -158,7 +163,7 @@ namespace Principia.Model
         // Result initializer
         private void InitializeResults()
         {
-            _sharedCourses = new Result<Share>(this, GetQuerySharedCourses(), Share.GetUnloadedInstance, Share.GetNullInstance);
+            _coursesAccepted = new Result<Accept>(this, GetQueryCoursesAccepted(), Accept.GetUnloadedInstance, Accept.GetNullInstance);
         }
 
         // Predecessor access
@@ -170,10 +175,705 @@ namespace Principia.Model
         }
 
         // Query result access
-        public Result<Share> SharedCourses
+        public Result<Accept> CoursesAccepted
         {
-            get { return _sharedCourses; }
+            get { return _coursesAccepted; }
         }
+
+        // Mutable property access
+
+    }
+    
+    public partial class Token : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Token newFact = new Token(memento);
+
+				// Create a memory stream from the memento data.
+				using (MemoryStream data = new MemoryStream(memento.Data))
+				{
+					using (BinaryReader output = new BinaryReader(data))
+					{
+						newFact._identifier = (string)_fieldSerializerByType[typeof(string)].ReadData(output);
+					}
+				}
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Token fact = (Token)obj;
+				_fieldSerializerByType[typeof(string)].WriteData(output, fact._identifier);
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Token.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Token.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Token", 8);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Token GetUnloadedInstance()
+        {
+            return new Token((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Token GetNullInstance()
+        {
+            return new Token((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Token> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Token)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+
+        // Queries
+
+        // Predicates
+
+        // Predecessors
+
+        // Fields
+        private string _identifier;
+
+        // Results
+
+        // Business constructor
+        public Token(
+            string identifier
+            )
+        {
+            InitializeResults();
+            _identifier = identifier;
+        }
+
+        // Hydration constructor
+        private Token(FactMemento memento)
+        {
+            InitializeResults();
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+
+        // Field access
+        public string Identifier
+        {
+            get { return _identifier; }
+        }
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
+    public partial class Request : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Request newFact = new Request(memento);
+
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Request fact = (Request)obj;
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Request.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Request.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Request", 914985032);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Request GetUnloadedInstance()
+        {
+            return new Request((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Request GetNullInstance()
+        {
+            return new Request((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Request> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Request)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleIndividual;
+        public static Role GetRoleIndividual()
+        {
+            if (_cacheRoleIndividual == null)
+            {
+                _cacheRoleIndividual = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "individual",
+			        Individual._correspondenceFactType,
+			        true));
+            }
+            return _cacheRoleIndividual;
+        }
+        private static Role _cacheRoleToken;
+        public static Role GetRoleToken()
+        {
+            if (_cacheRoleToken == null)
+            {
+                _cacheRoleToken = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "token",
+			        Token._correspondenceFactType,
+			        true));
+            }
+            return _cacheRoleToken;
+        }
+
+        // Queries
+
+        // Predicates
+
+        // Predecessors
+        private PredecessorObj<Individual> _individual;
+        private PredecessorObj<Token> _token;
+
+        // Fields
+
+        // Results
+
+        // Business constructor
+        public Request(
+            Individual individual
+            ,Token token
+            )
+        {
+            InitializeResults();
+            _individual = new PredecessorObj<Individual>(this, GetRoleIndividual(), individual);
+            _token = new PredecessorObj<Token>(this, GetRoleToken(), token);
+        }
+
+        // Hydration constructor
+        private Request(FactMemento memento)
+        {
+            InitializeResults();
+            _individual = new PredecessorObj<Individual>(this, GetRoleIndividual(), memento, Individual.GetUnloadedInstance, Individual.GetNullInstance);
+            _token = new PredecessorObj<Token>(this, GetRoleToken(), memento, Token.GetUnloadedInstance, Token.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Individual Individual
+        {
+            get { return IsNull ? Individual.GetNullInstance() : _individual.Fact; }
+        }
+        public Token Token
+        {
+            get { return IsNull ? Token.GetNullInstance() : _token.Fact; }
+        }
+
+        // Field access
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
+    public partial class Grant : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Grant newFact = new Grant(memento);
+
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Grant fact = (Grant)obj;
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Grant.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Grant.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Grant", -728454336);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Grant GetUnloadedInstance()
+        {
+            return new Grant((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Grant GetNullInstance()
+        {
+            return new Grant((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Grant> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Grant)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleRequest;
+        public static Role GetRoleRequest()
+        {
+            if (_cacheRoleRequest == null)
+            {
+                _cacheRoleRequest = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "request",
+			        Request._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleRequest;
+        }
+        private static Role _cacheRoleCourse;
+        public static Role GetRoleCourse()
+        {
+            if (_cacheRoleCourse == null)
+            {
+                _cacheRoleCourse = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "course",
+			        Course._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleCourse;
+        }
+
+        // Queries
+
+        // Predicates
+
+        // Predecessors
+        private PredecessorObj<Request> _request;
+        private PredecessorObj<Course> _course;
+
+        // Fields
+
+        // Results
+
+        // Business constructor
+        public Grant(
+            Request request
+            ,Course course
+            )
+        {
+            InitializeResults();
+            _request = new PredecessorObj<Request>(this, GetRoleRequest(), request);
+            _course = new PredecessorObj<Course>(this, GetRoleCourse(), course);
+        }
+
+        // Hydration constructor
+        private Grant(FactMemento memento)
+        {
+            InitializeResults();
+            _request = new PredecessorObj<Request>(this, GetRoleRequest(), memento, Request.GetUnloadedInstance, Request.GetNullInstance);
+            _course = new PredecessorObj<Course>(this, GetRoleCourse(), memento, Course.GetUnloadedInstance, Course.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Request Request
+        {
+            get { return IsNull ? Request.GetNullInstance() : _request.Fact; }
+        }
+        public Course Course
+        {
+            get { return IsNull ? Course.GetNullInstance() : _course.Fact; }
+        }
+
+        // Field access
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
+    public partial class Accept : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				Accept newFact = new Accept(memento);
+
+				// Create a memory stream from the memento data.
+				using (MemoryStream data = new MemoryStream(memento.Data))
+				{
+					using (BinaryReader output = new BinaryReader(data))
+					{
+						newFact._unique = (Guid)_fieldSerializerByType[typeof(Guid)].ReadData(output);
+					}
+				}
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				Accept fact = (Accept)obj;
+				_fieldSerializerByType[typeof(Guid)].WriteData(output, fact._unique);
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return Accept.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return Accept.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.Accept", -662595790);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static Accept GetUnloadedInstance()
+        {
+            return new Accept((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static Accept GetNullInstance()
+        {
+            return new Accept((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<Accept> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (Accept)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleGrant;
+        public static Role GetRoleGrant()
+        {
+            if (_cacheRoleGrant == null)
+            {
+                _cacheRoleGrant = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "grant",
+			        Grant._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleGrant;
+        }
+
+        // Queries
+        private static Query _cacheQueryIsDeleted;
+
+        public static Query GetQueryIsDeleted()
+		{
+            if (_cacheQueryIsDeleted == null)
+            {
+			    _cacheQueryIsDeleted = new Query()
+		    		.JoinSuccessors(AcceptDelete.GetRoleAccept())
+                ;
+            }
+            return _cacheQueryIsDeleted;
+		}
+
+        // Predicates
+        public static Condition IsDeleted = Condition.WhereIsNotEmpty(GetQueryIsDeleted());
+
+        // Predecessors
+        private PredecessorObj<Grant> _grant;
+
+        // Unique
+        private Guid _unique;
+
+        // Fields
+
+        // Results
+
+        // Business constructor
+        public Accept(
+            Grant grant
+            )
+        {
+            _unique = Guid.NewGuid();
+            InitializeResults();
+            _grant = new PredecessorObj<Grant>(this, GetRoleGrant(), grant);
+        }
+
+        // Hydration constructor
+        private Accept(FactMemento memento)
+        {
+            InitializeResults();
+            _grant = new PredecessorObj<Grant>(this, GetRoleGrant(), memento, Grant.GetUnloadedInstance, Grant.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Grant Grant
+        {
+            get { return IsNull ? Grant.GetNullInstance() : _grant.Fact; }
+        }
+
+        // Field access
+		public Guid Unique { get { return _unique; } }
+
+
+        // Query result access
+
+        // Mutable property access
+
+    }
+    
+    public partial class AcceptDelete : CorrespondenceFact
+    {
+		// Factory
+		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
+		{
+			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
+
+			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
+			{
+				_fieldSerializerByType = fieldSerializerByType;
+			}
+
+			public CorrespondenceFact CreateFact(FactMemento memento)
+			{
+				AcceptDelete newFact = new AcceptDelete(memento);
+
+
+				return newFact;
+			}
+
+			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
+			{
+				AcceptDelete fact = (AcceptDelete)obj;
+			}
+
+            public CorrespondenceFact GetUnloadedInstance()
+            {
+                return AcceptDelete.GetUnloadedInstance();
+            }
+
+            public CorrespondenceFact GetNullInstance()
+            {
+                return AcceptDelete.GetNullInstance();
+            }
+		}
+
+		// Type
+		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
+			"Principia.Model.AcceptDelete", -887735056);
+
+		protected override CorrespondenceFactType GetCorrespondenceFactType()
+		{
+			return _correspondenceFactType;
+		}
+
+        // Null and unloaded instances
+        public static AcceptDelete GetUnloadedInstance()
+        {
+            return new AcceptDelete((FactMemento)null) { IsLoaded = false };
+        }
+
+        public static AcceptDelete GetNullInstance()
+        {
+            return new AcceptDelete((FactMemento)null) { IsNull = true };
+        }
+
+        // Ensure
+        public Task<AcceptDelete> EnsureAsync()
+        {
+            if (_loadedTask != null)
+                return _loadedTask.ContinueWith(t => (AcceptDelete)t.Result);
+            else
+                return Task.FromResult(this);
+        }
+
+        // Roles
+        private static Role _cacheRoleAccept;
+        public static Role GetRoleAccept()
+        {
+            if (_cacheRoleAccept == null)
+            {
+                _cacheRoleAccept = new Role(new RoleMemento(
+			        _correspondenceFactType,
+			        "accept",
+			        Accept._correspondenceFactType,
+			        false));
+            }
+            return _cacheRoleAccept;
+        }
+
+        // Queries
+
+        // Predicates
+
+        // Predecessors
+        private PredecessorObj<Accept> _accept;
+
+        // Fields
+
+        // Results
+
+        // Business constructor
+        public AcceptDelete(
+            Accept accept
+            )
+        {
+            InitializeResults();
+            _accept = new PredecessorObj<Accept>(this, GetRoleAccept(), accept);
+        }
+
+        // Hydration constructor
+        private AcceptDelete(FactMemento memento)
+        {
+            InitializeResults();
+            _accept = new PredecessorObj<Accept>(this, GetRoleAccept(), memento, Accept.GetUnloadedInstance, Accept.GetNullInstance);
+        }
+
+        // Result initializer
+        private void InitializeResults()
+        {
+        }
+
+        // Predecessor access
+        public Accept Accept
+        {
+            get { return IsNull ? Accept.GetNullInstance() : _accept.Fact; }
+        }
+
+        // Field access
+
+        // Query result access
 
         // Mutable property access
 
@@ -935,307 +1635,6 @@ namespace Principia.Model
 
     }
     
-    public partial class Share : CorrespondenceFact
-    {
-		// Factory
-		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
-		{
-			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
-
-			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
-			{
-				_fieldSerializerByType = fieldSerializerByType;
-			}
-
-			public CorrespondenceFact CreateFact(FactMemento memento)
-			{
-				Share newFact = new Share(memento);
-
-				// Create a memory stream from the memento data.
-				using (MemoryStream data = new MemoryStream(memento.Data))
-				{
-					using (BinaryReader output = new BinaryReader(data))
-					{
-						newFact._unique = (Guid)_fieldSerializerByType[typeof(Guid)].ReadData(output);
-					}
-				}
-
-				return newFact;
-			}
-
-			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
-			{
-				Share fact = (Share)obj;
-				_fieldSerializerByType[typeof(Guid)].WriteData(output, fact._unique);
-			}
-
-            public CorrespondenceFact GetUnloadedInstance()
-            {
-                return Share.GetUnloadedInstance();
-            }
-
-            public CorrespondenceFact GetNullInstance()
-            {
-                return Share.GetNullInstance();
-            }
-		}
-
-		// Type
-		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
-			"Principia.Model.Share", 1747774338);
-
-		protected override CorrespondenceFactType GetCorrespondenceFactType()
-		{
-			return _correspondenceFactType;
-		}
-
-        // Null and unloaded instances
-        public static Share GetUnloadedInstance()
-        {
-            return new Share((FactMemento)null) { IsLoaded = false };
-        }
-
-        public static Share GetNullInstance()
-        {
-            return new Share((FactMemento)null) { IsNull = true };
-        }
-
-        // Ensure
-        public Task<Share> EnsureAsync()
-        {
-            if (_loadedTask != null)
-                return _loadedTask.ContinueWith(t => (Share)t.Result);
-            else
-                return Task.FromResult(this);
-        }
-
-        // Roles
-        private static Role _cacheRoleIndividual;
-        public static Role GetRoleIndividual()
-        {
-            if (_cacheRoleIndividual == null)
-            {
-                _cacheRoleIndividual = new Role(new RoleMemento(
-			        _correspondenceFactType,
-			        "individual",
-			        Individual._correspondenceFactType,
-			        false));
-            }
-            return _cacheRoleIndividual;
-        }
-        private static Role _cacheRoleCourse;
-        public static Role GetRoleCourse()
-        {
-            if (_cacheRoleCourse == null)
-            {
-                _cacheRoleCourse = new Role(new RoleMemento(
-			        _correspondenceFactType,
-			        "course",
-			        Course._correspondenceFactType,
-			        false));
-            }
-            return _cacheRoleCourse;
-        }
-
-        // Queries
-        private static Query _cacheQueryIsCurrent;
-
-        public static Query GetQueryIsCurrent()
-		{
-            if (_cacheQueryIsCurrent == null)
-            {
-			    _cacheQueryIsCurrent = new Query()
-		    		.JoinSuccessors(ShareRevoke.GetRoleShare())
-                ;
-            }
-            return _cacheQueryIsCurrent;
-		}
-
-        // Predicates
-        public static Condition IsCurrent = Condition.WhereIsEmpty(GetQueryIsCurrent());
-
-        // Predecessors
-        private PredecessorObj<Individual> _individual;
-        private PredecessorObj<Course> _course;
-
-        // Unique
-        private Guid _unique;
-
-        // Fields
-
-        // Results
-
-        // Business constructor
-        public Share(
-            Individual individual
-            ,Course course
-            )
-        {
-            _unique = Guid.NewGuid();
-            InitializeResults();
-            _individual = new PredecessorObj<Individual>(this, GetRoleIndividual(), individual);
-            _course = new PredecessorObj<Course>(this, GetRoleCourse(), course);
-        }
-
-        // Hydration constructor
-        private Share(FactMemento memento)
-        {
-            InitializeResults();
-            _individual = new PredecessorObj<Individual>(this, GetRoleIndividual(), memento, Individual.GetUnloadedInstance, Individual.GetNullInstance);
-            _course = new PredecessorObj<Course>(this, GetRoleCourse(), memento, Course.GetUnloadedInstance, Course.GetNullInstance);
-        }
-
-        // Result initializer
-        private void InitializeResults()
-        {
-        }
-
-        // Predecessor access
-        public Individual Individual
-        {
-            get { return IsNull ? Individual.GetNullInstance() : _individual.Fact; }
-        }
-        public Course Course
-        {
-            get { return IsNull ? Course.GetNullInstance() : _course.Fact; }
-        }
-
-        // Field access
-		public Guid Unique { get { return _unique; } }
-
-
-        // Query result access
-
-        // Mutable property access
-
-    }
-    
-    public partial class ShareRevoke : CorrespondenceFact
-    {
-		// Factory
-		internal class CorrespondenceFactFactory : ICorrespondenceFactFactory
-		{
-			private IDictionary<Type, IFieldSerializer> _fieldSerializerByType;
-
-			public CorrespondenceFactFactory(IDictionary<Type, IFieldSerializer> fieldSerializerByType)
-			{
-				_fieldSerializerByType = fieldSerializerByType;
-			}
-
-			public CorrespondenceFact CreateFact(FactMemento memento)
-			{
-				ShareRevoke newFact = new ShareRevoke(memento);
-
-
-				return newFact;
-			}
-
-			public void WriteFactData(CorrespondenceFact obj, BinaryWriter output)
-			{
-				ShareRevoke fact = (ShareRevoke)obj;
-			}
-
-            public CorrespondenceFact GetUnloadedInstance()
-            {
-                return ShareRevoke.GetUnloadedInstance();
-            }
-
-            public CorrespondenceFact GetNullInstance()
-            {
-                return ShareRevoke.GetNullInstance();
-            }
-		}
-
-		// Type
-		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
-			"Principia.Model.ShareRevoke", 1755234432);
-
-		protected override CorrespondenceFactType GetCorrespondenceFactType()
-		{
-			return _correspondenceFactType;
-		}
-
-        // Null and unloaded instances
-        public static ShareRevoke GetUnloadedInstance()
-        {
-            return new ShareRevoke((FactMemento)null) { IsLoaded = false };
-        }
-
-        public static ShareRevoke GetNullInstance()
-        {
-            return new ShareRevoke((FactMemento)null) { IsNull = true };
-        }
-
-        // Ensure
-        public Task<ShareRevoke> EnsureAsync()
-        {
-            if (_loadedTask != null)
-                return _loadedTask.ContinueWith(t => (ShareRevoke)t.Result);
-            else
-                return Task.FromResult(this);
-        }
-
-        // Roles
-        private static Role _cacheRoleShare;
-        public static Role GetRoleShare()
-        {
-            if (_cacheRoleShare == null)
-            {
-                _cacheRoleShare = new Role(new RoleMemento(
-			        _correspondenceFactType,
-			        "share",
-			        Share._correspondenceFactType,
-			        false));
-            }
-            return _cacheRoleShare;
-        }
-
-        // Queries
-
-        // Predicates
-
-        // Predecessors
-        private PredecessorObj<Share> _share;
-
-        // Fields
-
-        // Results
-
-        // Business constructor
-        public ShareRevoke(
-            Share share
-            )
-        {
-            InitializeResults();
-            _share = new PredecessorObj<Share>(this, GetRoleShare(), share);
-        }
-
-        // Hydration constructor
-        private ShareRevoke(FactMemento memento)
-        {
-            InitializeResults();
-            _share = new PredecessorObj<Share>(this, GetRoleShare(), memento, Share.GetUnloadedInstance, Share.GetNullInstance);
-        }
-
-        // Result initializer
-        private void InitializeResults()
-        {
-        }
-
-        // Predecessor access
-        public Share Share
-        {
-            get { return IsNull ? Share.GetNullInstance() : _share.Fact; }
-        }
-
-        // Field access
-
-        // Query result access
-
-        // Mutable property access
-
-    }
-    
     public partial class Module : CorrespondenceFact
     {
 		// Factory
@@ -1283,7 +1682,7 @@ namespace Principia.Model
 
 		// Type
 		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
-			"Principia.Model.Module", 517634410);
+			"Principia.Model.Module", 517634414);
 
 		protected override CorrespondenceFactType GetCorrespondenceFactType()
 		{
@@ -1320,7 +1719,7 @@ namespace Principia.Model
 			        _correspondenceFactType,
 			        "course",
 			        Course._correspondenceFactType,
-			        false));
+			        true));
             }
             return _cacheRoleCourse;
         }
@@ -1856,7 +2255,7 @@ namespace Principia.Model
 
 		// Type
 		internal static CorrespondenceFactType _correspondenceFactType = new CorrespondenceFactType(
-			"Principia.Model.Clip", 517634410);
+			"Principia.Model.Clip", 517634414);
 
 		protected override CorrespondenceFactType GetCorrespondenceFactType()
 		{
@@ -1893,7 +2292,7 @@ namespace Principia.Model
 			        _correspondenceFactType,
 			        "course",
 			        Course._correspondenceFactType,
-			        false));
+			        true));
             }
             return _cacheRoleCourse;
         }
@@ -2554,7 +2953,30 @@ namespace Principia.Model
 				new FactMetadata(new List<CorrespondenceFactType> { Individual._correspondenceFactType }));
 			community.AddQuery(
 				Individual._correspondenceFactType,
-				Individual.GetQuerySharedCourses().QueryDefinition);
+				Individual.GetQueryCoursesAccepted().QueryDefinition);
+			community.AddType(
+				Token._correspondenceFactType,
+				new Token.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Token._correspondenceFactType }));
+			community.AddType(
+				Request._correspondenceFactType,
+				new Request.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Request._correspondenceFactType }));
+			community.AddType(
+				Grant._correspondenceFactType,
+				new Grant.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Grant._correspondenceFactType }));
+			community.AddType(
+				Accept._correspondenceFactType,
+				new Accept.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { Accept._correspondenceFactType }));
+			community.AddQuery(
+				Accept._correspondenceFactType,
+				Accept.GetQueryIsDeleted().QueryDefinition);
+			community.AddType(
+				AcceptDelete._correspondenceFactType,
+				new AcceptDelete.CorrespondenceFactFactory(fieldSerializerByType),
+				new FactMetadata(new List<CorrespondenceFactType> { AcceptDelete._correspondenceFactType }));
 			community.AddType(
 				Course._correspondenceFactType,
 				new Course.CorrespondenceFactFactory(fieldSerializerByType),
@@ -2592,17 +3014,6 @@ namespace Principia.Model
 			community.AddQuery(
 				Course__description._correspondenceFactType,
 				Course__description.GetQueryIsCurrent().QueryDefinition);
-			community.AddType(
-				Share._correspondenceFactType,
-				new Share.CorrespondenceFactFactory(fieldSerializerByType),
-				new FactMetadata(new List<CorrespondenceFactType> { Share._correspondenceFactType }));
-			community.AddQuery(
-				Share._correspondenceFactType,
-				Share.GetQueryIsCurrent().QueryDefinition);
-			community.AddType(
-				ShareRevoke._correspondenceFactType,
-				new ShareRevoke.CorrespondenceFactFactory(fieldSerializerByType),
-				new FactMetadata(new List<CorrespondenceFactType> { ShareRevoke._correspondenceFactType }));
 			community.AddType(
 				Module._correspondenceFactType,
 				new Module.CorrespondenceFactFactory(fieldSerializerByType),

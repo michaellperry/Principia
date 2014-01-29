@@ -10,7 +10,10 @@ namespace Principia.Model
         public static async Task<Course> NewCourse(this Individual individual)
         {
             var course = await individual.Community.AddFactAsync(new Course());
-            await individual.Community.AddFactAsync(new Share(individual, course));
+            var token = await individual.Community.AddFactAsync(new Token(Guid.NewGuid().ToString()));
+            var request = await individual.Community.AddFactAsync(new Request(individual, token));
+            var grant = await individual.Community.AddFactAsync(new Grant(request, course));
+            var accept = await individual.Community.AddFactAsync(new Accept(grant));
             return course;
         }
 

@@ -3,13 +3,64 @@ namespace Principia.Model;
 fact Individual {
 key:
     string anonymousId;
+	//principal;
 
 query:
-	Share *sharedCourses {
-		Share s : s.individual = this
-			where s.isCurrent
+	Accept* coursesAccepted {
+		Accept a : a.grant.request.individual = this
+			where not a.isDeleted
 	}
 }
+
+
+/////////////////////////////////
+// Sharing
+
+fact Token {
+key:
+	string identifier;
+}
+
+fact Request {
+key:
+	publish Individual individual;
+	publish Token token;
+
+	//from individual;
+}
+
+fact Grant {
+key:
+	Request request;
+	Course course;
+
+	//to request.individual;
+	//unlock course;
+}
+
+fact Accept {
+key:
+	unique;
+	Grant grant;
+	
+	//from grant.request.individual;
+
+query:
+	bool isDeleted {
+		exists AcceptDelete d : d.accept = this
+	}
+}
+
+fact AcceptDelete {
+key:
+	Accept accept;
+
+	//from accept.grant.request.individual;
+}
+
+
+///////////////////////////////////
+// Courses
 
 fact Course {
 key:
@@ -26,27 +77,10 @@ query:
 	}
 }
 
-fact Share {
-key:
-	unique;
-	Individual individual;
-	Course course;
-
-query:
-	bool isCurrent {
-		not exists ShareRevoke r : r.share = this
-	}
-}
-
-fact ShareRevoke {
-key:
-	Share share;
-}
-
 fact Module {
 key:
 	unique;
-	Course course;
+	publish Course course;
 
 mutable:
 	int ordinal;
@@ -63,7 +97,7 @@ query:
 fact Clip {
 key:
 	unique;
-	Course course;
+	publish Course course;
 
 mutable:
 	int ordinal;
