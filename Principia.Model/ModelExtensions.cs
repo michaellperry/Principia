@@ -11,7 +11,8 @@ namespace Principia.Model
         {
             var course = await individual.Community.AddFactAsync(new Course());
             var token = await individual.Community.AddFactAsync(new Token(Guid.NewGuid().ToString()));
-            var request = await individual.Community.AddFactAsync(new Request(individual, token));
+            var profile = await individual.Community.AddFactAsync(new Profile(individual));
+            var request = await individual.Community.AddFactAsync(new Request(profile, token));
             var grant = await individual.Community.AddFactAsync(new Grant(request, course));
             var accept = await individual.Community.AddFactAsync(new Accept(grant));
             return course;
@@ -19,14 +20,15 @@ namespace Principia.Model
 
         public static async Task<Module> NewModule(this Course course)
         {
-            var module = await course.Community.AddFactAsync(new Module(course));
+            var courseContent = await course.Community.AddFactAsync(new CourseContent(course));
+            var module = await course.Community.AddFactAsync(new Module(courseContent));
             return module;
         }
 
         public static async Task<Clip> NewClip(this Module module)
         {
-            var course = await module.Course.EnsureAsync();
-            var clip = await module.Community.AddFactAsync(new Clip(course));
+            var courseContent = await module.CourseContent.EnsureAsync();
+            var clip = await module.Community.AddFactAsync(new Clip(courseContent));
             await module.Community.AddFactAsync(new ClipModule(
                 clip, module, Enumerable.Empty<ClipModule>()));
             return clip;
@@ -43,6 +45,22 @@ namespace Principia.Model
             var ordinals = await Task.WhenAll(loadedItems.Select(item =>
                 ordinalProperty(item).EnsureAsync()));
             return ordinals.Max(o => o.Value) + 1;
+        }
+
+        public static async Task<Profile> NewProfile(this Individual individual)
+        {
+            return await individual.Community.AddFactAsync(new Profile(individual));
+        }
+
+        public static async Task<Request> NewRequest(this Token token, Individual individual)
+        {
+            var profile = await individual.NewProfile();
+            return await token.Community.AddFactAsync(new Request(profile, token));
+        }
+
+        public static async Task<Grant> NewGrant(this Request request, Course course)
+        {
+            return await request.Community.AddFactAsync(new Grant(request, course));
         }
     }
 }

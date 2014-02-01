@@ -3,6 +3,8 @@ using System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Principia.Model;
+using Principia.Sharing.Views;
 
 namespace Principia.ViewModels
 {
@@ -20,6 +22,11 @@ namespace Principia.ViewModels
         public void GoToCoursePage()
         {
             NavigateTo<CoursePage>();
+        }
+
+        public void GoToSendPage()
+        {
+            NavigateTo<SendPage>();
         }
 
         private async void NavigateTo<Page>()

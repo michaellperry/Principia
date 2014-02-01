@@ -11,8 +11,12 @@ namespace Principia
     {
         public static async Task Create(
             Individual individual,
-            Courses.Models.CourseSelectionModel courseSelection)
+            Courses.Models.CourseSelectionModel courseSelection,
+            Sharing.Models.ShareModel shareModel)
         {
+            var profile = await individual.NewProfile();
+            profile.Name = "Flynn";
+
             for (int i = 0; i < 20; ++i)
             {
                 await CourseBy(individual,
@@ -26,18 +30,24 @@ namespace Principia
                 "Patterns for Building Distributed Systems for the Enterprise",
                 "Model driven architectures, CQRS, Event Sourcing, and Domain Driven Design for the rest of us.");
             var xamlPatterns = await CourseBy(individual,
-                "Cryptography Fundamentals for Java and .NET Developers",
+                "XAML Patterns",
                 "In the spirit of Design Patterns by the Gang of Four, XAML Patterns defines a pattern language for rich client applications.");
             await CourseBy(individual,
                 "The Parse Mobile Backend with Windows 8",
                 "Building Windows Store applications using the Parse mobile backend as a service.");
 
-            xamlPatterns.Description =
+            var courseContent = await xamlPatterns.Community.AddFactAsync(
+                new CourseContent(xamlPatterns));
+            courseContent.Description =
                 "Build applications at a higher level of abstraction. This set of interrelated patterns solves common UI application design problems in a way that keeps both developers and designers happy. Build applications faster, and make them more maintainable, on any XAML stack.";
 
             courseSelection.SelectedCourse = xamlPatterns;
 
             await CreateCourseOutline(xamlPatterns, courseSelection.ClipSelection);
+
+            await shareModel.CreateTokenAsync(new Uri("principia://designmode"));
+            var request = await shareModel.Token.NewRequest(individual);
+            var grant = await request.NewGrant(xamlPatterns);
         }
 
         private static async Task<Course> CourseBy(Individual individual, string title, string shortDescription)

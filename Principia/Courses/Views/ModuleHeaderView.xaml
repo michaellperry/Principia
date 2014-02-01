@@ -23,7 +23,7 @@
             Background="{StaticResource ModuleBackgroundBrush}" 
             Tapped="ModuleHeader_Tapped"/>
 
-		<StackPanel d:DataContext="{d:DesignData /SampleData/ModuleHeaderViewModelSampleData.xaml}" VerticalAlignment="Top" Margin="5">
+		<StackPanel VerticalAlignment="Top" Margin="5">
 			<Grid>
 				<Border 
 					x:Name="SelectedBorder" 

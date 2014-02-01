@@ -6,10 +6,36 @@ key:
 	//principal;
 
 query:
+	Profile* profiles {
+		Profile p : p.individual = this
+	}
+
 	Accept* coursesAccepted {
-		Accept a : a.grant.request.individual = this
+		Accept a : a.grant.request.profile.individual = this
 			where not a.isDeleted
 	}
+
+	Course* courses {
+		Accept a : a.grant.request.profile.individual = this
+			where not a.isDeleted
+		Course c : c = a.grant.course
+	}
+
+	CourseContent* courseContents {
+		Accept a : a.grant.request.profile.individual = this
+			where not a.isDeleted
+		CourseContent cc : cc.course = a.grant.course
+	}
+}
+
+fact Profile {
+key:
+	publish Individual individual;
+
+	//from individual;
+
+mutable:
+	publish string name;
 }
 
 
@@ -19,14 +45,24 @@ query:
 fact Token {
 key:
 	string identifier;
+
+query:
+	Request* requests {
+		Request r : r.token = this
+	}
+
+	Course* courses {
+		Grant g : g.request.token = this
+		Course c : c = g.course
+	}
 }
 
 fact Request {
 key:
-	publish Individual individual;
+	publish Profile profile;
 	publish Token token;
 
-	//from individual;
+	//from profile.individual;
 }
 
 fact Grant {
@@ -34,7 +70,7 @@ key:
 	Request request;
 	Course course;
 
-	//to request.individual;
+	//to request.profile.individual;
 	//unlock course;
 }
 
@@ -43,7 +79,7 @@ key:
 	unique;
 	Grant grant;
 	
-	//from grant.request.individual;
+	//from grant.request.profile.individual;
 
 query:
 	bool isDeleted {
@@ -55,7 +91,7 @@ fact AcceptDelete {
 key:
 	Accept accept;
 
-	//from accept.grant.request.individual;
+	//from accept.grant.request.profile.individual;
 }
 
 
@@ -67,20 +103,31 @@ key:
 	unique;
 
 mutable:
-	string title;
-	string shortDescription;
-	string description;
+	publish string title;
+	publish string shortDescription;
 
 query:
-	Module* modules {
-		Module m : m.course = this
+	CourseContent* contents {
+		CourseContent cc : cc.course = this
 	}
+
+	Module* modules {
+		Module m : m.courseContent.course = this
+	}
+}
+
+fact CourseContent {
+key:
+	publish Course course;
+
+mutable:
+	publish string description;
 }
 
 fact Module {
 key:
 	unique;
-	publish Course course;
+	publish CourseContent courseContent;
 
 mutable:
 	int ordinal;
@@ -97,7 +144,7 @@ query:
 fact Clip {
 key:
 	unique;
-	publish Course course;
+	publish CourseContent courseContent;
 
 mutable:
 	int ordinal;

@@ -16,6 +16,9 @@
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>
+        	<CommandBar.SecondaryCommands>
+        		<AppBarButton Label="Share" Icon="People"/>
+        	</CommandBar.SecondaryCommands>
             <AppBarButton Label="Delete" Icon="Delete"/>
             <AppBarSeparator/>
             <AppBarButton Label="New Module" Icon="Bullets" Command="{Binding NewModuleCommand, Mode=OneWay}"/>

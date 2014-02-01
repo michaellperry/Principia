@@ -1,4 +1,5 @@
-﻿using Principia.ViewModels;
+﻿using Principia.Sharing.Views;
+using Principia.ViewModels;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -98,6 +99,17 @@ namespace Principia
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                var protocolArgs = (ProtocolActivatedEventArgs)args;
+
+                var frame = Window.Current.Content as Frame;
+                frame.Navigate(typeof(ReceivePage), protocolArgs.Uri);
+            }
         }
     }
 }

@@ -25,9 +25,11 @@ namespace Principia.Courses
 
         public static CourseOutlineViewModel CourseOutlineViewModel(
             Course course,
-            ClipSelectionModel clipSelection)
+            ClipSelectionModel clipSelection,
+            NavigationService navigationService,
+            Sharing.Models.ShareModel shareModel)
         {
-            return new CourseOutlineViewModel(course, clipSelection,
+            return new CourseOutlineViewModel(course, clipSelection, navigationService, shareModel,
                 module => new ModuleHeaderViewModel(module, clipSelection,
                     clip => new ClipHeaderViewModel(module, clip, clipSelection)));
         }

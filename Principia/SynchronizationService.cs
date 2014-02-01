@@ -22,6 +22,7 @@ namespace Principia
         private static readonly Regex Punctuation = new Regex(@"[{}\-]");
 
         private Community _community;
+        private Sharing.Models.ShareModel _shareModel;
         private Independent<Individual> _individual = new Independent<Individual>(
 			Individual.GetNullInstance());
 
@@ -35,6 +36,12 @@ namespace Principia
             //_community.AddAsynchronousCommunicationStrategy(communication);
             _community.Register<CorrespondenceModel>();
             _community.Subscribe(() => Individual);
+            _community.Subscribe(() => Individual.Courses);
+            _community.Subscribe(() => Individual.CourseContents);
+            _community.Subscribe(() => _shareModel.Token);
+            _community.Subscribe(() => _shareModel.Token.Courses);
+
+            _shareModel = new Sharing.Models.ShareModel(_community);
 
             // Synchronize periodically.
             DispatcherTimer timer = new DispatcherTimer();
@@ -71,6 +78,8 @@ namespace Principia
             _community = new Community(new MemoryStorageStrategy());
             _community.Register<CorrespondenceModel>();
 
+            _shareModel = new Sharing.Models.ShareModel(_community);
+
             CreateIndividualDesignData(courseSelection);
         }
 
@@ -95,6 +104,11 @@ namespace Principia
                     _individual.Value = value;
                 }
             }
+        }
+
+        public Sharing.Models.ShareModel ShareModel
+        {
+            get { return _shareModel; }
         }
 
         public void Synchronize()
@@ -127,7 +141,8 @@ namespace Principia
                 var individual = await _community.AddFactAsync(new Individual("design"));
                 await DesignData.Create(
                     individual,
-                    courseSelection);
+                    courseSelection,
+                    _shareModel);
                 Individual = individual;
             });
         }

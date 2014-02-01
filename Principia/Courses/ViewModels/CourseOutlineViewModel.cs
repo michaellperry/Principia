@@ -1,5 +1,6 @@
 ﻿using Principia.Courses.Models;
 using Principia.Model;
+using Principia.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,21 @@ namespace Principia.Courses.ViewModels
     {
         private readonly Course _course;
         private readonly ClipSelectionModel _clipSelection;
+        private readonly NavigationService _navigationService;
+        private readonly Sharing.Models.ShareModel _shareModel;
         private readonly Func<Module, ModuleHeaderViewModel> _newModuleHeaderViewModel;
         
         public CourseOutlineViewModel(
             Course course,
             ClipSelectionModel clipSelection,
+            NavigationService navigationService,
+            Sharing.Models.ShareModel shareModel,
             Func<Module, ModuleHeaderViewModel> newModuleHeaderViewModel)
         {
             _course = course;
             _clipSelection = clipSelection;
+            _navigationService = navigationService;
+            _shareModel = shareModel;
             _newModuleHeaderViewModel = newModuleHeaderViewModel;
         }
 
@@ -90,6 +97,23 @@ namespace Principia.Courses.ViewModels
                             clip.Ordinal = await module.Clips.NextOrdinal(c => c.Ordinal);
                             _clipSelection.SelectedModule = module;
                             _clipSelection.SelectedClip = clip;
+                        });
+                    });
+            }
+        }
+
+        public ICommand SendInvitationCommand
+        {
+            get
+            {
+                return MakeCommand
+                    .Do(delegate
+                    {
+                        _course.Community.Perform(async delegate
+                        {
+                            _shareModel.Course = _course;
+                            await _shareModel.CreateNewTokenAsync();
+                            _navigationService.GoToSendPage();
                         });
                     });
             }

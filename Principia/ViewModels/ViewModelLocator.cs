@@ -52,7 +52,9 @@ namespace Principia.ViewModels
                     {
                         return Courses.Factory.CourseOutlineViewModel(
                             _courseSelection.SelectedCourse,
-                            _courseSelection.ClipSelection);
+                            _courseSelection.ClipSelection,
+                            _navigationService,
+                            _synchronizationService.ShareModel);
                     }
                 });
             }
@@ -79,6 +81,26 @@ namespace Principia.ViewModels
                     return Courses.Factory.CourseDetailViewModel(
                         _courseSelection.SelectedCourse);
                 });
+            }
+        }
+
+        public object Receive
+        {
+            get
+            {
+                return ViewModel(() => new Sharing.ViewModels.ReceiveViewModel(
+                    _synchronizationService.ShareModel,
+                    _synchronizationService.Individual));
+            }
+        }
+
+        public object Send
+        {
+            get
+            {
+                return ViewModel(() => new Sharing.ViewModels.SendViewModel(
+                    _synchronizationService.ShareModel,
+                    _synchronizationService.Individual));
             }
         }
     }

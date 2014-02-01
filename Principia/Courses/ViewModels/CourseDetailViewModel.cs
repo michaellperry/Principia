@@ -1,4 +1,5 @@
-﻿using Principia.Model;
+﻿using System.Linq;
+using Principia.Model;
 using System.Collections.Generic;
 
 namespace Principia.Courses.ViewModels
@@ -26,8 +27,16 @@ namespace Principia.Courses.ViewModels
 
         public string Description
         {
-            get { return _course.Description; }
-            set { _course.Description = value; }
+            get { return _course.Contents.Select(cc => cc.Description.Value).FirstOrDefault(); }
+            set
+            {
+                _course.Community.Perform(async delegate
+                {
+                    var courseContent = await _course.Community.AddFactAsync(
+                        new CourseContent(_course));
+                    courseContent.Description = value;
+                });
+            }
         }
 
         public IEnumerable<TagViewModel> Tags { get; set; }
