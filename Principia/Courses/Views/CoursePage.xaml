@@ -17,7 +17,7 @@
     <Page.BottomAppBar>
         <CommandBar>
         	<CommandBar.SecondaryCommands>
-        		<AppBarButton Label="Share" Icon="People"/>
+        		<AppBarButton Label="Send Invitation" Icon="People" Command="{Binding SendInvitationCommand}"/>
         	</CommandBar.SecondaryCommands>
             <AppBarButton Label="Delete" Icon="Delete"/>
             <AppBarSeparator/>
