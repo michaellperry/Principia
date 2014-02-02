@@ -39,7 +39,7 @@ namespace Principia
             _community.Subscribe(() => Individual.Courses);
             _community.Subscribe(() => Individual.CourseContents);
             _community.Subscribe(() => _shareModel.Token);
-            _community.Subscribe(() => _shareModel.Token.Courses);
+            _community.Subscribe(() => _shareModel.Request.Courses);
 
             _shareModel = new Sharing.Models.ShareModel(_community);
 

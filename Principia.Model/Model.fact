@@ -50,11 +50,6 @@ query:
 	Request* requests {
 		Request r : r.token = this
 	}
-
-	Course* courses {
-		Grant g : g.request.token = this
-		Course c : c = g.course
-	}
 }
 
 fact Request {
@@ -63,6 +58,12 @@ key:
 	publish Token token;
 
 	//from profile.individual;
+
+query:
+	Course* courses {
+		Grant g : g.request = this
+		Course c : c = g.course
+	}
 }
 
 fact Grant {

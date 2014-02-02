@@ -67,7 +67,7 @@ namespace Principia.Sharing.ViewModels
             get
             {
                 return
-                    from course in _shareModel.Token.Courses
+                    from course in _shareModel.Request.Courses
                     select new CourseViewModel(course);
             }
         }

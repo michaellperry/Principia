@@ -47,13 +47,13 @@ namespace Principia.Sharing.Views
             {
                 DataRequest request = e.Request;
 
-                request.Data.Properties.Title = "Share the invitation link";
+                request.Data.Properties.Title = "Invitation to collaborate in Principia";
                 request.Data.Properties.Description =
                     "Send a link to friends, so that they can collaborate on this course.";
                 request.Data.SetText(
-                    "Please collaborate with me on a course. Click the link below to open Principia, " +
-                    "and I will grant you access." + Environment.NewLine + Environment.NewLine +
-                    viewModel.Uri.AbsoluteUri);
+                    "<p>Please collaborate with me on a course. Click the link below to open Principia, " +
+                    "and I will grant you access.</p><br/>" +
+                    String.Format("<a href=\"{0}\">{0}</a>", viewModel.Uri.AbsoluteUri));
                 request.Data.SetWebLink(viewModel.Uri);
             }
         }

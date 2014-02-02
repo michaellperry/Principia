@@ -677,20 +677,6 @@ namespace Principia.Model
             }
             return _cacheQueryRequests;
 		}
-        private static Query _cacheQueryCourses;
-
-        public static Query GetQueryCourses()
-		{
-            if (_cacheQueryCourses == null)
-            {
-			    _cacheQueryCourses = new Query()
-		    		.JoinSuccessors(Request.GetRoleToken())
-		    		.JoinSuccessors(Grant.GetRoleRequest())
-		    		.JoinPredecessors(Grant.GetRoleCourse())
-                ;
-            }
-            return _cacheQueryCourses;
-		}
 
         // Predicates
 
@@ -701,7 +687,6 @@ namespace Principia.Model
 
         // Results
         private Result<Request> _requests;
-        private Result<Course> _courses;
 
         // Business constructor
         public Token(
@@ -722,7 +707,6 @@ namespace Principia.Model
         private void InitializeResults()
         {
             _requests = new Result<Request>(this, GetQueryRequests(), Request.GetUnloadedInstance, Request.GetNullInstance);
-            _courses = new Result<Course>(this, GetQueryCourses(), Course.GetUnloadedInstance, Course.GetNullInstance);
         }
 
         // Predecessor access
@@ -737,10 +721,6 @@ namespace Principia.Model
         public Result<Request> Requests
         {
             get { return _requests; }
-        }
-        public Result<Course> Courses
-        {
-            get { return _courses; }
         }
 
         // Mutable property access
@@ -841,6 +821,19 @@ namespace Principia.Model
         }
 
         // Queries
+        private static Query _cacheQueryCourses;
+
+        public static Query GetQueryCourses()
+		{
+            if (_cacheQueryCourses == null)
+            {
+			    _cacheQueryCourses = new Query()
+		    		.JoinSuccessors(Grant.GetRoleRequest())
+		    		.JoinPredecessors(Grant.GetRoleCourse())
+                ;
+            }
+            return _cacheQueryCourses;
+		}
 
         // Predicates
 
@@ -851,6 +844,7 @@ namespace Principia.Model
         // Fields
 
         // Results
+        private Result<Course> _courses;
 
         // Business constructor
         public Request(
@@ -874,6 +868,7 @@ namespace Principia.Model
         // Result initializer
         private void InitializeResults()
         {
+            _courses = new Result<Course>(this, GetQueryCourses(), Course.GetUnloadedInstance, Course.GetNullInstance);
         }
 
         // Predecessor access
@@ -889,6 +884,10 @@ namespace Principia.Model
         // Field access
 
         // Query result access
+        public Result<Course> Courses
+        {
+            get { return _courses; }
+        }
 
         // Mutable property access
 
@@ -3571,13 +3570,13 @@ namespace Principia.Model
 			community.AddQuery(
 				Token._correspondenceFactType,
 				Token.GetQueryRequests().QueryDefinition);
-			community.AddQuery(
-				Token._correspondenceFactType,
-				Token.GetQueryCourses().QueryDefinition);
 			community.AddType(
 				Request._correspondenceFactType,
 				new Request.CorrespondenceFactFactory(fieldSerializerByType),
 				new FactMetadata(new List<CorrespondenceFactType> { Request._correspondenceFactType }));
+			community.AddQuery(
+				Request._correspondenceFactType,
+				Request.GetQueryCourses().QueryDefinition);
 			community.AddType(
 				Grant._correspondenceFactType,
 				new Grant.CorrespondenceFactFactory(fieldSerializerByType),
