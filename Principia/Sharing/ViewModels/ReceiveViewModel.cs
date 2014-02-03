@@ -6,20 +6,24 @@ using System.Text;
 using System.Threading.Tasks;
 using UpdateControls.Fields;
 using Principia.Model;
+using UpdateControls.Correspondence;
 
 namespace Principia.Sharing.ViewModels
 {
     public class ReceiveViewModel
     {
+        private readonly ICommunity _community;
         private readonly ShareModel _shareModel;
         private readonly Individual _individual;
 
         private Binding _requestBinding;
-
+        
         public ReceiveViewModel(
+            ICommunity community,
             ShareModel shareModel,
             Individual individual)
         {
+            _community = community;
             _shareModel = shareModel;
             _individual = individual;
 
@@ -34,6 +38,22 @@ namespace Principia.Sharing.ViewModels
                         });
                     }
                 });
+        }
+
+        public string LastException
+        {
+            get
+            {
+                if (_community.LastException == null)
+                    return null;
+
+                return _community.LastException.Message;
+            }
+        }
+
+        public bool Synchronizing
+        {
+            get { return _community.Synchronizing; }
         }
 
         public void SetUri(Uri value)

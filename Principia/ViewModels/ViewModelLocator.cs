@@ -34,6 +34,7 @@ namespace Principia.ViewModels
             get
             {
                 return ViewModel(() => Courses.Factory.CourseListViewModel(
+                    _synchronizationService.Community,
                     _synchronizationService.Individual,
                     _courseSelection,
                     _navigationService));
@@ -51,6 +52,7 @@ namespace Principia.ViewModels
                     else
                     {
                         return Courses.Factory.CourseOutlineViewModel(
+                            _synchronizationService.Community,
                             _courseSelection.SelectedCourse,
                             _courseSelection.ClipSelection,
                             _navigationService,
@@ -89,6 +91,7 @@ namespace Principia.ViewModels
             get
             {
                 return ViewModel(() => new Sharing.ViewModels.ReceiveViewModel(
+                    _synchronizationService.Community,
                     _synchronizationService.ShareModel,
                     _synchronizationService.Individual));
             }
@@ -99,6 +102,7 @@ namespace Principia.ViewModels
             get
             {
                 return ViewModel(() => new Sharing.ViewModels.SendViewModel(
+                    _synchronizationService.Community,
                     _synchronizationService.ShareModel,
                     _synchronizationService.Individual));
             }

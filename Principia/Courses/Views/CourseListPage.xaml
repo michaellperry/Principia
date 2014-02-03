@@ -60,6 +60,10 @@
             ScrollViewer.HorizontalScrollBarVisibility="Auto" 
             Padding="120,0,0,60" 
             Grid.Row="1"/>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Orientation="Horizontal" IsHitTestVisible="False">
+        	<TextBlock TextWrapping="Wrap" Text="{Binding LastException, Mode=OneWay}" FontSize="14.667" Margin="20" Foreground="#FFDC9595" VerticalAlignment="Center"/>
+        	<ProgressRing HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="40" Height="40" Margin="20" IsActive="{Binding Synchronizing, Mode=OneWay}"/>
+        </StackPanel>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>

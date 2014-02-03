@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using UpdateControls.Correspondence;
 using UpdateControls.XAML;
 
 namespace Principia.Courses.ViewModels
 {
     public class CourseOutlineViewModel
     {
+        private readonly ICommunity _community;
         private readonly Course _course;
         private readonly ClipSelectionModel _clipSelection;
         private readonly NavigationService _navigationService;
@@ -19,17 +21,35 @@ namespace Principia.Courses.ViewModels
         private readonly Func<Module, ModuleHeaderViewModel> _newModuleHeaderViewModel;
         
         public CourseOutlineViewModel(
+            ICommunity community,
             Course course,
             ClipSelectionModel clipSelection,
             NavigationService navigationService,
             Sharing.Models.ShareModel shareModel,
             Func<Module, ModuleHeaderViewModel> newModuleHeaderViewModel)
         {
+            _community = community;
             _course = course;
             _clipSelection = clipSelection;
             _navigationService = navigationService;
             _shareModel = shareModel;
             _newModuleHeaderViewModel = newModuleHeaderViewModel;
+        }
+
+        public string LastException
+        {
+            get
+            {
+                if (_community.LastException == null)
+                    return null;
+
+                return _community.LastException.Message;
+            }
+        }
+
+        public bool Synchronizing
+        {
+            get { return _community.Synchronizing; }
         }
 
         public string Title
