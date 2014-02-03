@@ -677,6 +677,19 @@ namespace Principia.Model
             }
             return _cacheQueryRequests;
 		}
+        private static Query _cacheQueryProfiles;
+
+        public static Query GetQueryProfiles()
+		{
+            if (_cacheQueryProfiles == null)
+            {
+			    _cacheQueryProfiles = new Query()
+		    		.JoinSuccessors(Request.GetRoleToken())
+		    		.JoinPredecessors(Request.GetRoleProfile())
+                ;
+            }
+            return _cacheQueryProfiles;
+		}
 
         // Predicates
 
@@ -687,6 +700,7 @@ namespace Principia.Model
 
         // Results
         private Result<Request> _requests;
+        private Result<Profile> _profiles;
 
         // Business constructor
         public Token(
@@ -707,6 +721,7 @@ namespace Principia.Model
         private void InitializeResults()
         {
             _requests = new Result<Request>(this, GetQueryRequests(), Request.GetUnloadedInstance, Request.GetNullInstance);
+            _profiles = new Result<Profile>(this, GetQueryProfiles(), Profile.GetUnloadedInstance, Profile.GetNullInstance);
         }
 
         // Predecessor access
@@ -721,6 +736,10 @@ namespace Principia.Model
         public Result<Request> Requests
         {
             get { return _requests; }
+        }
+        public Result<Profile> Profiles
+        {
+            get { return _profiles; }
         }
 
         // Mutable property access
@@ -3570,6 +3589,9 @@ namespace Principia.Model
 			community.AddQuery(
 				Token._correspondenceFactType,
 				Token.GetQueryRequests().QueryDefinition);
+			community.AddQuery(
+				Token._correspondenceFactType,
+				Token.GetQueryProfiles().QueryDefinition);
 			community.AddType(
 				Request._correspondenceFactType,
 				new Request.CorrespondenceFactFactory(fieldSerializerByType),

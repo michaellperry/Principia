@@ -50,6 +50,11 @@ query:
 	Request* requests {
 		Request r : r.token = this
 	}
+
+	Profile* profiles {
+		Request r : r.token = this
+		Profile p : p = r.profile
+	}
 }
 
 fact Request {
