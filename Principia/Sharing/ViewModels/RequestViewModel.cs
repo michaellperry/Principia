@@ -15,6 +15,11 @@ namespace Principia.Sharing.ViewModels
             _request = request;
         }
 
+        internal Request Request
+        {
+            get { return _request; }
+        }
+
         public string IndividualName
         {
             get { return _request.Profile.Name.Value ?? "<Unidentified>"; }

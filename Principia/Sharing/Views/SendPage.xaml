@@ -9,22 +9,27 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	DataContext="{Binding Send, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-	<Page.Resources>
-		<DataTemplate x:Key="RequestViewModelTemplate">
-			<Grid Height="110" Width="480" Margin="10" >
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
-				<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110">
-					<Image Height="110" Width="110"/>
-				</Border>
-				<StackPanel Grid.Column="1" Margin="10,0,0,0">
-					<TextBlock Text="{Binding IndividualName}" Style="{StaticResource TitleTextBlockStyle}"/>
-				</StackPanel>
-			</Grid>
-		</DataTemplate>
-	</Page.Resources>
+    <Page.Resources>
+        <DataTemplate x:Key="RequestViewModelTemplate">
+            <Grid Height="110" Width="480" Margin="10" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110">
+                    <Image Height="110" Width="110"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <TextBlock Text="{Binding IndividualName}" Style="{StaticResource TitleTextBlockStyle}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="GrantAccessButton" Label="Grant Access" Icon="AddFriend" Click="GrantAccess_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -63,10 +68,10 @@
             <TextBox Text="{Binding Uri, Mode=TwoWay}" Margin="5" HorizontalAlignment="Left" Width="450"/>
             <TextBlock TextWrapping="Wrap" Text="Recipients names will appear below. Tap their name to grant them access to the course." FontSize="14.667" Opacity="0.5" Margin="5" HorizontalAlignment="Left"/>
         </StackPanel>
-        <GridView ItemTemplate="{StaticResource RequestViewModelTemplate}" ItemsSource="{Binding Requests}" IsSwipeEnabled="False" Grid.Row="2" SelectionMode="Single" Padding="105,0,0,10"/>
+        <GridView x:Name="RequestGridView" ItemTemplate="{StaticResource RequestViewModelTemplate}" ItemsSource="{Binding Requests}" IsSwipeEnabled="True" Grid.Row="2" SelectionMode="Multiple" Padding="105,0,0,10" SelectionChanged="RequestGridView_SelectionChanged"/>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="2" Orientation="Horizontal" IsHitTestVisible="False">
-        	<TextBlock TextWrapping="Wrap" Text="{Binding LastException, Mode=OneWay}" FontSize="14.667" Margin="20" Foreground="#FFDC9595" VerticalAlignment="Center"/>
-        	<ProgressRing HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="40" Height="40" Margin="20" IsActive="{Binding Synchronizing, Mode=OneWay}"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding LastException, Mode=OneWay}" FontSize="14.667" Margin="20" Foreground="#FFDC9595" VerticalAlignment="Center"/>
+            <ProgressRing HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="40" Height="40" Margin="20" IsActive="{Binding Synchronizing, Mode=OneWay}"/>
         </StackPanel>
     </Grid>
 </Page>

@@ -55,5 +55,20 @@ namespace Principia.Sharing.ViewModels
                     select new RequestViewModel(request);
             }
         }
+
+        public void GrantAccess(IEnumerable<RequestViewModel> requestViewModels)
+        {
+            var requests = requestViewModels
+                .Select(r => r.Request)
+                .ToList();
+
+            _community.Perform(async delegate
+            {
+                foreach (var request in requests)
+                {
+                    await request.NewGrant(_shareModel.Course);
+                }
+            });
+        }
     }
 }

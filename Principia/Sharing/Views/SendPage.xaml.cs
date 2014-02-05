@@ -1,16 +1,24 @@
 ﻿using Principia.Common;
 using Principia.Sharing.ViewModels;
 using System;
+using System.Linq;
 using UpdateControls.XAML;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml;
+using System.Collections.Generic;
+using UpdateControls.Fields;
 
 namespace Principia.Sharing.Views
 {
     public sealed partial class SendPage : Page
     {
         private NavigationHelper _navigationHelper;
+        private Independent<List<RequestViewModel>> _selectedRequests =
+            new Independent<List<RequestViewModel>>(new List<RequestViewModel>());
+
+        private Binding _anyRequestsSelected;
 
         public NavigationHelper NavigationHelper
         {
@@ -29,10 +37,19 @@ namespace Principia.Sharing.Views
 
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += ShareTextHandler;
+
+            _anyRequestsSelected = Binding.Bind(() => _selectedRequests.Value.Any(),
+                delegate(bool anyRequestsSelected)
+                {
+                    BottomAppBar.IsOpen = anyRequestsSelected;
+                    GrantAccessButton.IsEnabled = anyRequestsSelected;
+                });
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            _anyRequestsSelected.Dispose();
+
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested -= ShareTextHandler;
 
@@ -59,6 +76,30 @@ namespace Principia.Sharing.Views
                 request.Data.SetHtmlFormat(htmlFormat);
                 request.Data.SetApplicationLink(viewModel.Uri);
             }
+        }
+
+        private void GrantAccess_Click(object sender, RoutedEventArgs e)
+        {
+            var viewModel = ForView.Unwrap<SendViewModel>(DataContext);
+            if (viewModel != null)
+            {
+                var requests =
+                    from item in RequestGridView.SelectedItems
+                    let request = ForView.Unwrap<RequestViewModel>(item)
+                    where request != null
+                    select request;
+                viewModel.GrantAccess(requests);
+            }
+        }
+
+        private void RequestGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var requests =
+                from item in RequestGridView.SelectedItems
+                let request = ForView.Unwrap<RequestViewModel>(item)
+                where request != null
+                select request;
+            _selectedRequests.Value = requests.ToList();
         }
     }
 }
