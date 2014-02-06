@@ -65,6 +65,10 @@ key:
 	//from profile.individual;
 
 query:
+	Grant* grants {
+		Grant g : g.request = this
+	}
+
 	Course* courses {
 		Grant g : g.request = this
 		Course c : c = g.course
@@ -78,6 +82,11 @@ key:
 
 	//to request.profile.individual;
 	//unlock course;
+
+query:
+	Accept* accepts {
+		Accept a : a.grant = this
+	}
 }
 
 fact Accept {

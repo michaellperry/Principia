@@ -24,5 +24,10 @@ namespace Principia.Sharing.ViewModels
         {
             get { return _request.Profile.Name.Value ?? "<Unidentified>"; }
         }
+
+        public bool CanGrant
+        {
+            get { return !_request.Grants.Any(); }
+        }
     }
 }

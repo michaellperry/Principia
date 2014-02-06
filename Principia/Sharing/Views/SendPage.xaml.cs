@@ -38,10 +38,13 @@ namespace Principia.Sharing.Views
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += ShareTextHandler;
 
-            _anyRequestsSelected = Binding.Bind(() => _selectedRequests.Value.Any(),
+            _anyRequestsSelected = Binding.Bind(
+                () => _selectedRequests.Value.Any(
+                    r => r.CanGrant),
                 delegate(bool anyRequestsSelected)
                 {
                     BottomAppBar.IsOpen = anyRequestsSelected;
+                    BottomAppBar.IsSticky = anyRequestsSelected;
                     GrantAccessButton.IsEnabled = anyRequestsSelected;
                 });
         }
@@ -83,12 +86,7 @@ namespace Principia.Sharing.Views
             var viewModel = ForView.Unwrap<SendViewModel>(DataContext);
             if (viewModel != null)
             {
-                var requests =
-                    from item in RequestGridView.SelectedItems
-                    let request = ForView.Unwrap<RequestViewModel>(item)
-                    where request != null
-                    select request;
-                viewModel.GrantAccess(requests);
+                viewModel.GrantAccess(_selectedRequests.Value);
             }
         }
 

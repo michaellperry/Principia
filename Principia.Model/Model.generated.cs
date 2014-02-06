@@ -840,6 +840,18 @@ namespace Principia.Model
         }
 
         // Queries
+        private static Query _cacheQueryGrants;
+
+        public static Query GetQueryGrants()
+		{
+            if (_cacheQueryGrants == null)
+            {
+			    _cacheQueryGrants = new Query()
+		    		.JoinSuccessors(Grant.GetRoleRequest())
+                ;
+            }
+            return _cacheQueryGrants;
+		}
         private static Query _cacheQueryCourses;
 
         public static Query GetQueryCourses()
@@ -863,6 +875,7 @@ namespace Principia.Model
         // Fields
 
         // Results
+        private Result<Grant> _grants;
         private Result<Course> _courses;
 
         // Business constructor
@@ -887,6 +900,7 @@ namespace Principia.Model
         // Result initializer
         private void InitializeResults()
         {
+            _grants = new Result<Grant>(this, GetQueryGrants(), Grant.GetUnloadedInstance, Grant.GetNullInstance);
             _courses = new Result<Course>(this, GetQueryCourses(), Course.GetUnloadedInstance, Course.GetNullInstance);
         }
 
@@ -903,6 +917,10 @@ namespace Principia.Model
         // Field access
 
         // Query result access
+        public Result<Grant> Grants
+        {
+            get { return _grants; }
+        }
         public Result<Course> Courses
         {
             get { return _courses; }
@@ -1006,6 +1024,18 @@ namespace Principia.Model
         }
 
         // Queries
+        private static Query _cacheQueryAccepts;
+
+        public static Query GetQueryAccepts()
+		{
+            if (_cacheQueryAccepts == null)
+            {
+			    _cacheQueryAccepts = new Query()
+		    		.JoinSuccessors(Accept.GetRoleGrant())
+                ;
+            }
+            return _cacheQueryAccepts;
+		}
 
         // Predicates
 
@@ -1016,6 +1046,7 @@ namespace Principia.Model
         // Fields
 
         // Results
+        private Result<Accept> _accepts;
 
         // Business constructor
         public Grant(
@@ -1039,6 +1070,7 @@ namespace Principia.Model
         // Result initializer
         private void InitializeResults()
         {
+            _accepts = new Result<Accept>(this, GetQueryAccepts(), Accept.GetUnloadedInstance, Accept.GetNullInstance);
         }
 
         // Predecessor access
@@ -1054,6 +1086,10 @@ namespace Principia.Model
         // Field access
 
         // Query result access
+        public Result<Accept> Accepts
+        {
+            get { return _accepts; }
+        }
 
         // Mutable property access
 
@@ -3598,11 +3634,17 @@ namespace Principia.Model
 				new FactMetadata(new List<CorrespondenceFactType> { Request._correspondenceFactType }));
 			community.AddQuery(
 				Request._correspondenceFactType,
+				Request.GetQueryGrants().QueryDefinition);
+			community.AddQuery(
+				Request._correspondenceFactType,
 				Request.GetQueryCourses().QueryDefinition);
 			community.AddType(
 				Grant._correspondenceFactType,
 				new Grant.CorrespondenceFactFactory(fieldSerializerByType),
 				new FactMetadata(new List<CorrespondenceFactType> { Grant._correspondenceFactType }));
+			community.AddQuery(
+				Grant._correspondenceFactType,
+				Grant.GetQueryAccepts().QueryDefinition);
 			community.AddType(
 				Accept._correspondenceFactType,
 				new Accept.CorrespondenceFactFactory(fieldSerializerByType),

@@ -87,9 +87,24 @@ namespace Principia.Sharing.ViewModels
             get
             {
                 return
-                    from course in _shareModel.Request.Courses
-                    select new CourseViewModel(course);
+                    from grant in _shareModel.Request.Grants
+                    select new CourseViewModel(grant);
             }
+        }
+
+        public void Join(IEnumerable<CourseViewModel> selectedCourses)
+        {
+            var grants = selectedCourses
+                .Select(c => c.Grant)
+                .ToList();
+
+            _community.Perform(async delegate
+            {
+                foreach (var grant in grants)
+                {
+                    await grant.NewAccept();
+                }
+            });
         }
     }
 }

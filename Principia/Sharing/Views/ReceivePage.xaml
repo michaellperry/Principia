@@ -29,7 +29,7 @@
 	<Page.BottomAppBar>
 		<CommandBar>
 			<CommandBar.SecondaryCommands>
-				<AppBarButton Label="Join" Icon="People"/>
+				<AppBarButton x:Name="JoinButton" Label="Join" Icon="People" Click="Join_Click" />
 			</CommandBar.SecondaryCommands>
 		</CommandBar>
 	</Page.BottomAppBar>
@@ -71,7 +71,7 @@
         	<TextBox Text="{Binding Name, Mode=TwoWay}" Margin="5" HorizontalAlignment="Left" Width="450"/>
         	<TextBlock TextWrapping="Wrap" Text="When the sender shares a course, it will appear below." FontSize="14.667" Opacity="0.5" Margin="5" HorizontalAlignment="Left"/>
         </StackPanel>
-        <GridView ItemTemplate="{StaticResource CourseViewModelTemplate}" ItemsSource="{Binding Courses}" IsSwipeEnabled="False" Grid.Row="2" SelectionMode="Single" Padding="105,0,0,10"/>
+        <GridView x:Name="CourseGridView" ItemTemplate="{StaticResource CourseViewModelTemplate}" ItemsSource="{Binding Courses}" IsSwipeEnabled="False" Grid.Row="2" SelectionMode="Single" Padding="105,0,0,10" SelectionChanged="RequestGridView_SelectionChanged" />
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="2" Orientation="Horizontal" IsHitTestVisible="False">
         	<TextBlock TextWrapping="Wrap" Text="{Binding LastException, Mode=OneWay}" FontSize="14.667" Margin="20" Foreground="#FFDC9595" VerticalAlignment="Center"/>
         	<ProgressRing HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="40" Height="40" Margin="20" IsActive="{Binding Synchronizing, Mode=OneWay}"/>

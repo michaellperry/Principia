@@ -62,5 +62,10 @@ namespace Principia.Model
         {
             return await request.Community.AddFactAsync(new Grant(request, course));
         }
+
+        public static async Task<Accept> NewAccept(this Grant grant)
+        {
+            return await grant.Community.AddFactAsync(new Accept(grant));
+        }
     }
 }
